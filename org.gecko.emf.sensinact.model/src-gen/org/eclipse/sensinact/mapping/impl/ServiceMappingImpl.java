@@ -1,0 +1,354 @@
+/*
+ * Copyright (c) 2012 - 2025 Data In Motion and others.
+ * All rights reserved. 
+ * 
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ * 
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *      Mark Hoffmann - initial API and implementation
+ */
+package org.eclipse.sensinact.mapping.impl;
+
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.eclipse.sensinact.mapping.MappingPackage;
+import org.eclipse.sensinact.mapping.ResourceMapping;
+import org.eclipse.sensinact.mapping.ServiceMapping;
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Service Mapping</b></em>'.
+ * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * </p>
+ * <ul>
+ *   <li>{@link org.eclipse.sensinact.mapping.impl.ServiceMappingImpl#getResources <em>Resources</em>}</li>
+ *   <li>{@link org.eclipse.sensinact.mapping.impl.ServiceMappingImpl#getCollectionFeature <em>Collection Feature</em>}</li>
+ *   <li>{@link org.eclipse.sensinact.mapping.impl.ServiceMappingImpl#getCollectionIndex <em>Collection Index</em>}</li>
+ *   <li>{@link org.eclipse.sensinact.mapping.impl.ServiceMappingImpl#getCollectionFilter <em>Collection Filter</em>}</li>
+ * </ul>
+ *
+ * @generated
+ */
+public class ServiceMappingImpl extends MappingImpl implements ServiceMapping {
+	/**
+	 * The cached value of the '{@link #getResources() <em>Resources</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getResources()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ResourceMapping> resources;
+
+	/**
+	 * The cached value of the '{@link #getCollectionFeature() <em>Collection Feature</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCollectionFeature()
+	 * @generated
+	 * @ordered
+	 */
+	protected EStructuralFeature collectionFeature;
+
+	/**
+	 * The default value of the '{@link #getCollectionIndex() <em>Collection Index</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCollectionIndex()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int COLLECTION_INDEX_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getCollectionIndex() <em>Collection Index</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCollectionIndex()
+	 * @generated
+	 * @ordered
+	 */
+	protected int collectionIndex = COLLECTION_INDEX_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getCollectionFilter() <em>Collection Filter</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCollectionFilter()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String COLLECTION_FILTER_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getCollectionFilter() <em>Collection Filter</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCollectionFilter()
+	 * @generated
+	 * @ordered
+	 */
+	protected String collectionFilter = COLLECTION_FILTER_EDEFAULT;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ServiceMappingImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return MappingPackage.Literals.SERVICE_MAPPING;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<ResourceMapping> getResources() {
+		if (resources == null) {
+			resources = new EObjectContainmentEList<ResourceMapping>(ResourceMapping.class, this, MappingPackage.SERVICE_MAPPING__RESOURCES);
+		}
+		return resources;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EStructuralFeature getCollectionFeature() {
+		if (collectionFeature != null && collectionFeature.eIsProxy()) {
+			InternalEObject oldCollectionFeature = (InternalEObject)collectionFeature;
+			collectionFeature = (EStructuralFeature)eResolveProxy(oldCollectionFeature);
+			if (collectionFeature != oldCollectionFeature) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MappingPackage.SERVICE_MAPPING__COLLECTION_FEATURE, oldCollectionFeature, collectionFeature));
+			}
+		}
+		return collectionFeature;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EStructuralFeature basicGetCollectionFeature() {
+		return collectionFeature;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setCollectionFeature(EStructuralFeature newCollectionFeature) {
+		EStructuralFeature oldCollectionFeature = collectionFeature;
+		collectionFeature = newCollectionFeature;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MappingPackage.SERVICE_MAPPING__COLLECTION_FEATURE, oldCollectionFeature, collectionFeature));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int getCollectionIndex() {
+		return collectionIndex;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setCollectionIndex(int newCollectionIndex) {
+		int oldCollectionIndex = collectionIndex;
+		collectionIndex = newCollectionIndex;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MappingPackage.SERVICE_MAPPING__COLLECTION_INDEX, oldCollectionIndex, collectionIndex));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getCollectionFilter() {
+		return collectionFilter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setCollectionFilter(String newCollectionFilter) {
+		String oldCollectionFilter = collectionFilter;
+		collectionFilter = newCollectionFilter;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MappingPackage.SERVICE_MAPPING__COLLECTION_FILTER, oldCollectionFilter, collectionFilter));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case MappingPackage.SERVICE_MAPPING__RESOURCES:
+				return ((InternalEList<?>)getResources()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case MappingPackage.SERVICE_MAPPING__RESOURCES:
+				return getResources();
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_FEATURE:
+				if (resolve) return getCollectionFeature();
+				return basicGetCollectionFeature();
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_INDEX:
+				return getCollectionIndex();
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_FILTER:
+				return getCollectionFilter();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case MappingPackage.SERVICE_MAPPING__RESOURCES:
+				getResources().clear();
+				getResources().addAll((Collection<? extends ResourceMapping>)newValue);
+				return;
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_FEATURE:
+				setCollectionFeature((EStructuralFeature)newValue);
+				return;
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_INDEX:
+				setCollectionIndex((Integer)newValue);
+				return;
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_FILTER:
+				setCollectionFilter((String)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case MappingPackage.SERVICE_MAPPING__RESOURCES:
+				getResources().clear();
+				return;
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_FEATURE:
+				setCollectionFeature((EStructuralFeature)null);
+				return;
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_INDEX:
+				setCollectionIndex(COLLECTION_INDEX_EDEFAULT);
+				return;
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_FILTER:
+				setCollectionFilter(COLLECTION_FILTER_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case MappingPackage.SERVICE_MAPPING__RESOURCES:
+				return resources != null && !resources.isEmpty();
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_FEATURE:
+				return collectionFeature != null;
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_INDEX:
+				return collectionIndex != COLLECTION_INDEX_EDEFAULT;
+			case MappingPackage.SERVICE_MAPPING__COLLECTION_FILTER:
+				return COLLECTION_FILTER_EDEFAULT == null ? collectionFilter != null : !COLLECTION_FILTER_EDEFAULT.equals(collectionFilter);
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (collectionIndex: ");
+		result.append(collectionIndex);
+		result.append(", collectionFilter: ");
+		result.append(collectionFilter);
+		result.append(')');
+		return result.toString();
+	}
+
+} //ServiceMappingImpl
