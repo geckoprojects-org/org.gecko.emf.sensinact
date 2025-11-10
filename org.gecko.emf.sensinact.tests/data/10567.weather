@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="ASCII"?>
+<dwdweather:WeatherStation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dwdweather="http://cdc.dwd.de/common/weather" name="GERA" id="10567">
+  <location latitude="12.13" longitude="50.88" elevation="311"/>
+</dwdweather:WeatherStation>

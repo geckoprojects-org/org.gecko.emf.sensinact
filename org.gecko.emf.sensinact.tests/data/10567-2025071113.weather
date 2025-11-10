@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ASCII"?>
+<dwdweather:MOSMIXSWeatherReport xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dwdweather="http://cdc.dwd.de/common/weather" id="10567-2025071113" timestamp="2025-07-11T13:00:00.000+0200" windDirection="317.0" windSpeed="3.09" windGustLastHour="6.17" windGustLastThreeHours="6.69" cloudCoverTotal="92.0" cloudCoverBelow500="0.0" cloudCoverEffective="80.0" cloudCoverHigh="68.0" cloudCoverMid="51.0" cloudCoverLow="51.0" irRadianceGlobal="1630.0" surfacePressure="101650.0" precipitationSignificantWeatherTotal="0.0" snowRainEqLast1="0.0" sunshineDurationLast1="1260.0" tempAboveSurface5="295.35" tempAboveSurface200="292.35" tempDewpointAboveSurface200="284.75" visibility="54700.0" significantWeather3Hours="02" fogPropLast1="1.0" fogPropLast6="1.0">
+  <astrotime sunset="2025-07-11T21:23:08.000+0200" sunrise="2025-07-11T05:11:08.000+0200" sunsetTwilight="2025-07-11T22:07:16.000+0200" sunriseTwilight="2025-07-11T04:26:47.000+0200"/>
+  <weatherStation href="/home/mark/tmp/weather/10567.weather#10567"/>
+  <significantWeather6Hours/>
+</dwdweather:MOSMIXSWeatherReport>
