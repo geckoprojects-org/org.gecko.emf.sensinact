@@ -39,6 +39,7 @@ import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.sensinact.mapping.MappingPackage;
+import org.eclipse.sensinact.mapping.NameMapping;
 import org.eclipse.sensinact.mapping.ResourceMapping;
 import org.eclipse.sensinact.mapping.TimestampMapping;
 
@@ -55,9 +56,8 @@ import org.eclipse.sensinact.mapping.TimestampMapping;
  *   <li>{@link org.eclipse.sensinact.mapping.impl.ResourceMappingImpl#getValueFeature <em>Value Feature</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.impl.ResourceMappingImpl#getTimestamp <em>Timestamp</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.impl.ResourceMappingImpl#getMid <em>Mid</em>}</li>
- *   <li>{@link org.eclipse.sensinact.mapping.impl.ResourceMappingImpl#getDescription <em>Description</em>}</li>
- *   <li>{@link org.eclipse.sensinact.mapping.impl.ResourceMappingImpl#getDescriptionFeature <em>Description Feature</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.impl.ResourceMappingImpl#getExtraMetadata <em>Extra Metadata</em>}</li>
+ *   <li>{@link org.eclipse.sensinact.mapping.impl.ResourceMappingImpl#getDescriptionMapping <em>Description Mapping</em>}</li>
  * </ul>
  *
  * @generated
@@ -134,36 +134,6 @@ public class ResourceMappingImpl extends EAttributeImpl implements ResourceMappi
 	protected String mid = MID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDescription()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String DESCRIPTION_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDescription()
-	 * @generated
-	 * @ordered
-	 */
-	protected String description = DESCRIPTION_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getDescriptionFeature() <em>Description Feature</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDescriptionFeature()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<EStructuralFeature> descriptionFeature;
-
-	/**
 	 * The cached value of the '{@link #getExtraMetadata() <em>Extra Metadata</em>}' map.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -172,6 +142,16 @@ public class ResourceMappingImpl extends EAttributeImpl implements ResourceMappi
 	 * @ordered
 	 */
 	protected EMap<String, String> extraMetadata;
+
+	/**
+	 * The cached value of the '{@link #getDescriptionMapping() <em>Description Mapping</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDescriptionMapping()
+	 * @generated
+	 * @ordered
+	 */
+	protected NameMapping descriptionMapping;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -310,47 +290,51 @@ public class ResourceMappingImpl extends EAttributeImpl implements ResourceMappi
 	 * @generated
 	 */
 	@Override
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDescription(String newDescription) {
-		String oldDescription = description;
-		description = newDescription;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MappingPackage.RESOURCE_MAPPING__DESCRIPTION, oldDescription, description));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<EStructuralFeature> getDescriptionFeature() {
-		if (descriptionFeature == null) {
-			descriptionFeature = new EObjectResolvingEList<EStructuralFeature>(EStructuralFeature.class, this, MappingPackage.RESOURCE_MAPPING__DESCRIPTION_FEATURE);
-		}
-		return descriptionFeature;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EMap<String, String> getExtraMetadata() {
 		if (extraMetadata == null) {
 			extraMetadata = new EcoreEMap<String,String>(MappingPackage.Literals.STRING_TO_STRING_MAP, StringToStringMapImpl.class, this, MappingPackage.RESOURCE_MAPPING__EXTRA_METADATA);
 		}
 		return extraMetadata;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NameMapping getDescriptionMapping() {
+		if (descriptionMapping != null && descriptionMapping.eIsProxy()) {
+			InternalEObject oldDescriptionMapping = (InternalEObject)descriptionMapping;
+			descriptionMapping = (NameMapping)eResolveProxy(oldDescriptionMapping);
+			if (descriptionMapping != oldDescriptionMapping) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MappingPackage.RESOURCE_MAPPING__DESCRIPTION_MAPPING, oldDescriptionMapping, descriptionMapping));
+			}
+		}
+		return descriptionMapping;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NameMapping basicGetDescriptionMapping() {
+		return descriptionMapping;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDescriptionMapping(NameMapping newDescriptionMapping) {
+		NameMapping oldDescriptionMapping = descriptionMapping;
+		descriptionMapping = newDescriptionMapping;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MappingPackage.RESOURCE_MAPPING__DESCRIPTION_MAPPING, oldDescriptionMapping, descriptionMapping));
 	}
 
 	/**
@@ -398,13 +382,12 @@ public class ResourceMappingImpl extends EAttributeImpl implements ResourceMappi
 				return basicGetTimestamp();
 			case MappingPackage.RESOURCE_MAPPING__MID:
 				return getMid();
-			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION:
-				return getDescription();
-			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION_FEATURE:
-				return getDescriptionFeature();
 			case MappingPackage.RESOURCE_MAPPING__EXTRA_METADATA:
 				if (coreType) return getExtraMetadata();
 				else return getExtraMetadata().map();
+			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION_MAPPING:
+				if (resolve) return getDescriptionMapping();
+				return basicGetDescriptionMapping();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -435,15 +418,11 @@ public class ResourceMappingImpl extends EAttributeImpl implements ResourceMappi
 			case MappingPackage.RESOURCE_MAPPING__MID:
 				setMid((String)newValue);
 				return;
-			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION:
-				setDescription((String)newValue);
-				return;
-			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION_FEATURE:
-				getDescriptionFeature().clear();
-				getDescriptionFeature().addAll((Collection<? extends EStructuralFeature>)newValue);
-				return;
 			case MappingPackage.RESOURCE_MAPPING__EXTRA_METADATA:
 				((EStructuralFeature.Setting)getExtraMetadata()).set(newValue);
+				return;
+			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION_MAPPING:
+				setDescriptionMapping((NameMapping)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -472,14 +451,11 @@ public class ResourceMappingImpl extends EAttributeImpl implements ResourceMappi
 			case MappingPackage.RESOURCE_MAPPING__MID:
 				setMid(MID_EDEFAULT);
 				return;
-			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION:
-				setDescription(DESCRIPTION_EDEFAULT);
-				return;
-			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION_FEATURE:
-				getDescriptionFeature().clear();
-				return;
 			case MappingPackage.RESOURCE_MAPPING__EXTRA_METADATA:
 				getExtraMetadata().clear();
+				return;
+			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION_MAPPING:
+				setDescriptionMapping((NameMapping)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -503,12 +479,10 @@ public class ResourceMappingImpl extends EAttributeImpl implements ResourceMappi
 				return timestamp != null;
 			case MappingPackage.RESOURCE_MAPPING__MID:
 				return MID_EDEFAULT == null ? mid != null : !MID_EDEFAULT.equals(mid);
-			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION:
-				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION_FEATURE:
-				return descriptionFeature != null && !descriptionFeature.isEmpty();
 			case MappingPackage.RESOURCE_MAPPING__EXTRA_METADATA:
 				return extraMetadata != null && !extraMetadata.isEmpty();
+			case MappingPackage.RESOURCE_MAPPING__DESCRIPTION_MAPPING:
+				return descriptionMapping != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -543,8 +517,6 @@ public class ResourceMappingImpl extends EAttributeImpl implements ResourceMappi
 		result.append(unit);
 		result.append(", mid: ");
 		result.append(mid);
-		result.append(", description: ");
-		result.append(description);
 		result.append(')');
 		return result.toString();
 	}

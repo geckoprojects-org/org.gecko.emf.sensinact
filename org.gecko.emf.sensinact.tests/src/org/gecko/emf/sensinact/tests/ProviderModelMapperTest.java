@@ -62,6 +62,7 @@ import org.osgi.util.promise.PromiseFactory;
 public class ProviderModelMapperTest {
 
 	private static final String MAPPING_URI = "/data/WeatherProviderMapping.xmi";
+	private static final String MAPPING_URI_2 = "/data/WeatherReportsProviderMapping.xmi";
 
     @InjectService
     ResourceSet resourceSet;
@@ -71,6 +72,7 @@ public class ProviderModelMapperTest {
     ProviderMappingRegistry mappingRegistry;
 
     private ProviderMapping weatherMapping;
+    private ProviderMapping weatherMapping2;
 
     @BeforeEach
     public void beforeEach() throws IOException {
@@ -79,6 +81,11 @@ public class ProviderModelMapperTest {
 		Resource mappingResource = resourceSet.createResource(URI.createURI(mappingUrl.toString()));
         mappingResource.load(null);
         weatherMapping = (ProviderMapping) mappingResource.getContents().get(0);
+        
+        URL mappingUrl2 = getClass().getResource(MAPPING_URI_2);
+		Resource mappingResource2 = resourceSet.createResource(URI.createURI(mappingUrl2.toString()));
+        mappingResource2.load(null);
+        weatherMapping2 = (ProviderMapping) mappingResource2.getContents().get(0);
     }
     
     @AfterEach
@@ -340,6 +347,35 @@ public class ProviderModelMapperTest {
         // Verify the provider class reference points to correct EMF model
         assertTrue(weatherMapping.getProviderClasses().get(0).getName().contains("MOSMIXSWeatherReport"));
     }
+    
+    @Test
+    @DisplayName("Weather mapping resources should have correct description from EAnnotation")
+    void weatherMapping2_hasCorrectDescriptionFromEAnnotation() throws InterruptedException, ExecutionException, InvocationTargetException {
+        mappingRegistry.registerModelMapping(weatherMapping2);
+        
+        Promise<Boolean> result = gatewayThread.execute(new AbstractSensinactCommand<Boolean>() {
+            @Override
+            protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
+                try {
+                    Model model = modelManager.getModel(weatherMapping2.getMid());
+                    assertNotNull(model);
+                    
+                    // Verify wind service resource types and units
+                    Service currentWeahterService = model.getServices().get("currentWeather");
+                    org.eclipse.sensinact.core.model.Resource windSpeed = currentWeahterService.getResources().get("windSpeed");
+                    assertNotNull(windSpeed);
+                    assertEquals("Wind speed: m/s (FF)", windSpeed.getDefaultMetadata().get("description"));
+                    
+                    return pf.resolved(true);
+                } catch (Exception e) {
+                    return pf.failed(e);
+                }
+            }
+        });
+        
+        assertTrue(result.getValue());
+    }
+
 
 //    @TestØ
 }

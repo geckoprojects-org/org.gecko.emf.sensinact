@@ -150,6 +150,10 @@ public class MappingAdapterFactory extends AdapterFactoryImpl {
 				return createStringToStringMapAdapter();
 			}
 			@Override
+			public Adapter caseReferenceMapping(ReferenceMapping object) {
+				return createReferenceMappingAdapter();
+			}
+			@Override
 			public Adapter caseEModelElement(EModelElement object) {
 				return createEModelElementAdapter();
 			}
@@ -410,6 +414,20 @@ public class MappingAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStringToStringMapAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.sensinact.mapping.ReferenceMapping <em>Reference Mapping</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.sensinact.mapping.ReferenceMapping
+	 * @generated
+	 */
+	public Adapter createReferenceMappingAdapter() {
 		return null;
 	}
 

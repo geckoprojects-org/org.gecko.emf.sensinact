@@ -88,6 +88,7 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory {
 			case MappingPackage.NAME_MAPPING: return createNameMapping();
 			case MappingPackage.VALUE_MAPPING: return createValueMapping();
 			case MappingPackage.STRING_TO_STRING_MAP: return (EObject)createStringToStringMap();
+			case MappingPackage.REFERENCE_MAPPING: return createReferenceMapping();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -304,6 +305,17 @@ public class MappingFactoryImpl extends EFactoryImpl implements MappingFactory {
 	public Map.Entry<String, String> createStringToStringMap() {
 		StringToStringMapImpl stringToStringMap = new StringToStringMapImpl();
 		return stringToStringMap;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ReferenceMapping createReferenceMapping() {
+		ReferenceMappingImpl referenceMapping = new ReferenceMappingImpl();
+		return referenceMapping;
 	}
 
 	/**

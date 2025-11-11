@@ -43,6 +43,7 @@ import org.eclipse.sensinact.mapping.ProfileResource;
 import org.eclipse.sensinact.mapping.ProfileService;
 import org.eclipse.sensinact.mapping.ProviderMapping;
 import org.eclipse.sensinact.mapping.ProviderStrategy;
+import org.eclipse.sensinact.mapping.ReferenceMapping;
 import org.eclipse.sensinact.mapping.ResourceMapping;
 import org.eclipse.sensinact.mapping.ServiceMapping;
 import org.eclipse.sensinact.mapping.TimestampMapping;
@@ -167,6 +168,13 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 	 * @generated
 	 */
 	private EClass stringToStringMapEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass referenceMappingEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -606,28 +614,8 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getServiceMapping_CollectionFeature() {
+	public EReference getServiceMapping_ReferencedResource() {
 		return (EReference)serviceMappingEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getServiceMapping_CollectionIndex() {
-		return (EAttribute)serviceMappingEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getServiceMapping_CollectionFilter() {
-		return (EAttribute)serviceMappingEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -696,28 +684,18 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getResourceMapping_Description() {
-		return (EAttribute)resourceMappingEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getResourceMapping_DescriptionFeature() {
-		return (EReference)resourceMappingEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getResourceMapping_ExtraMetadata() {
-		return (EReference)resourceMappingEClass.getEStructuralFeatures().get(7);
+		return (EReference)resourceMappingEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getResourceMapping_DescriptionMapping() {
+		return (EReference)resourceMappingEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -956,6 +934,16 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getFeatureMapping_CollectionFilter() {
+		return (EAttribute)featureMappingEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTimestampMapping() {
 		return timestampMappingEClass;
 	}
@@ -1058,6 +1046,56 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 	@Override
 	public EAttribute getStringToStringMap_Value() {
 		return (EAttribute)stringToStringMapEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getReferenceMapping() {
+		return referenceMappingEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getReferenceMapping_Filter() {
+		return (EReference)referenceMappingEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getReferenceMapping_Exclude() {
+		return (EAttribute)referenceMappingEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getReferenceMapping_ReferenceMappings() {
+		return (EReference)referenceMappingEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getReferenceMapping_TargetEClass() {
+		return (EReference)referenceMappingEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1188,9 +1226,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 
 		serviceMappingEClass = createEClass(SERVICE_MAPPING);
 		createEReference(serviceMappingEClass, SERVICE_MAPPING__RESOURCES);
-		createEReference(serviceMappingEClass, SERVICE_MAPPING__COLLECTION_FEATURE);
-		createEAttribute(serviceMappingEClass, SERVICE_MAPPING__COLLECTION_INDEX);
-		createEAttribute(serviceMappingEClass, SERVICE_MAPPING__COLLECTION_FILTER);
+		createEReference(serviceMappingEClass, SERVICE_MAPPING__REFERENCED_RESOURCE);
 
 		resourceMappingEClass = createEClass(RESOURCE_MAPPING);
 		createEAttribute(resourceMappingEClass, RESOURCE_MAPPING__UNIT);
@@ -1198,9 +1234,8 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		createEReference(resourceMappingEClass, RESOURCE_MAPPING__VALUE_FEATURE);
 		createEReference(resourceMappingEClass, RESOURCE_MAPPING__TIMESTAMP);
 		createEAttribute(resourceMappingEClass, RESOURCE_MAPPING__MID);
-		createEAttribute(resourceMappingEClass, RESOURCE_MAPPING__DESCRIPTION);
-		createEReference(resourceMappingEClass, RESOURCE_MAPPING__DESCRIPTION_FEATURE);
 		createEReference(resourceMappingEClass, RESOURCE_MAPPING__EXTRA_METADATA);
+		createEReference(resourceMappingEClass, RESOURCE_MAPPING__DESCRIPTION_MAPPING);
 		createEOperation(resourceMappingEClass, RESOURCE_MAPPING___MAP_UNIT__EOBJECT_FUNCTION);
 
 		adminMappingEClass = createEClass(ADMIN_MAPPING);
@@ -1228,6 +1263,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		createEAttribute(featureMappingEClass, FEATURE_MAPPING__FUNCTION_ID);
 		createEReference(featureMappingEClass, FEATURE_MAPPING__FEATURE_PATH);
 		createEAttribute(featureMappingEClass, FEATURE_MAPPING__COLLECTION_INDEX);
+		createEAttribute(featureMappingEClass, FEATURE_MAPPING__COLLECTION_FILTER);
 
 		timestampMappingEClass = createEClass(TIMESTAMP_MAPPING);
 		createEAttribute(timestampMappingEClass, TIMESTAMP_MAPPING__STRATEGY);
@@ -1243,6 +1279,12 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		stringToStringMapEClass = createEClass(STRING_TO_STRING_MAP);
 		createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__KEY);
 		createEAttribute(stringToStringMapEClass, STRING_TO_STRING_MAP__VALUE);
+
+		referenceMappingEClass = createEClass(REFERENCE_MAPPING);
+		createEReference(referenceMappingEClass, REFERENCE_MAPPING__FILTER);
+		createEAttribute(referenceMappingEClass, REFERENCE_MAPPING__EXCLUDE);
+		createEReference(referenceMappingEClass, REFERENCE_MAPPING__REFERENCE_MAPPINGS);
+		createEReference(referenceMappingEClass, REFERENCE_MAPPING__TARGET_ECLASS);
 
 		// Create enums
 		timestampStrategyEEnum = createEEnum(TIMESTAMP_STRATEGY);
@@ -1291,6 +1333,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		timestampMappingEClass.getESuperTypes().add(this.getFeatureMapping());
 		nameMappingEClass.getESuperTypes().add(this.getFeatureMapping());
 		valueMappingEClass.getESuperTypes().add(this.getFeatureMapping());
+		referenceMappingEClass.getESuperTypes().add(this.getFeatureMapping());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(mappingProfileEClass, MappingProfile.class, "MappingProfile", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1332,9 +1375,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 
 		initEClass(serviceMappingEClass, ServiceMapping.class, "ServiceMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getServiceMapping_Resources(), this.getResourceMapping(), null, "resources", null, 0, -1, ServiceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getServiceMapping_CollectionFeature(), ecorePackage.getEStructuralFeature(), null, "collectionFeature", null, 0, 1, ServiceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getServiceMapping_CollectionIndex(), ecorePackage.getEInt(), "collectionIndex", "0", 0, 1, ServiceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getServiceMapping_CollectionFilter(), ecorePackage.getEString(), "collectionFilter", null, 0, 1, ServiceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getServiceMapping_ReferencedResource(), this.getReferenceMapping(), null, "referencedResource", null, 0, 1, ServiceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(resourceMappingEClass, ResourceMapping.class, "ResourceMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getResourceMapping_Unit(), ecorePackage.getEString(), "unit", null, 0, 1, ResourceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1342,9 +1383,8 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		initEReference(getResourceMapping_ValueFeature(), ecorePackage.getEStructuralFeature(), null, "valueFeature", null, 0, -1, ResourceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getResourceMapping_Timestamp(), this.getTimestampMapping(), null, "timestamp", null, 1, 1, ResourceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getResourceMapping_Mid(), ecorePackage.getEString(), "mid", null, 1, 1, ResourceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getResourceMapping_Description(), ecorePackage.getEString(), "description", null, 0, 1, ResourceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getResourceMapping_DescriptionFeature(), ecorePackage.getEStructuralFeature(), null, "descriptionFeature", null, 0, -1, ResourceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getResourceMapping_ExtraMetadata(), this.getStringToStringMap(), null, "extraMetadata", null, 0, -1, ResourceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getResourceMapping_DescriptionMapping(), this.getNameMapping(), null, "descriptionMapping", null, 0, 1, ResourceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
 		EOperation op = initEOperation(getResourceMapping__MapUnit__EObject_Function(), null, "mapUnit", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEObject(), "eobject", 1, 1, IS_UNIQUE, IS_ORDERED);
@@ -1381,6 +1421,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		initEAttribute(getFeatureMapping_FunctionId(), ecorePackage.getEString(), "functionId", null, 0, 1, FeatureMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFeatureMapping_FeaturePath(), ecorePackage.getEStructuralFeature(), null, "featurePath", null, 0, -1, FeatureMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeatureMapping_CollectionIndex(), ecorePackage.getEInt(), "collectionIndex", "0", 0, 1, FeatureMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFeatureMapping_CollectionFilter(), ecorePackage.getEString(), "collectionFilter", null, 0, 1, FeatureMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(timestampMappingEClass, TimestampMapping.class, "TimestampMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTimestampMapping_Strategy(), this.getTimestampStrategy(), "strategy", null, 0, 1, TimestampMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1396,6 +1437,12 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		initEClass(stringToStringMapEClass, Map.Entry.class, "StringToStringMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStringToStringMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStringToStringMap_Value(), ecorePackage.getEString(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(referenceMappingEClass, ReferenceMapping.class, "ReferenceMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getReferenceMapping_Filter(), ecorePackage.getEAttribute(), null, "filter", null, 0, -1, ReferenceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getReferenceMapping_Exclude(), ecorePackage.getEBoolean(), "exclude", "true", 0, 1, ReferenceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReferenceMapping_ReferenceMappings(), this.getReferenceMapping(), null, "referenceMappings", null, 0, -1, ReferenceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReferenceMapping_TargetEClass(), ecorePackage.getEClass(), null, "targetEClass", null, 0, 1, ReferenceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(timestampStrategyEEnum, TimestampStrategy.class, "TimestampStrategy");

@@ -30,10 +30,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.Enumerator;
+import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.sensinact.core.twin.SensinactDigitalTwin;
@@ -45,6 +49,7 @@ import org.eclipse.sensinact.gateway.geojson.GeoJsonObject;
 import org.eclipse.sensinact.gateway.geojson.Point;
 import org.eclipse.sensinact.mapping.AdminMapping;
 import org.eclipse.sensinact.mapping.FeatureMapping;
+import org.eclipse.sensinact.mapping.MappingFactory;
 import org.eclipse.sensinact.mapping.MappingProfile;
 import org.eclipse.sensinact.mapping.NameMapping;
 import org.eclipse.sensinact.mapping.ProviderMapping;
@@ -56,6 +61,8 @@ import org.gecko.emf.sensinact.model.ValueMapper;
 import org.gecko.emf.sensinact.model.ValueMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.BiFunction;
 
 /**
  * Implementation of {@link ValueMapper} that transforms EObject instances into SensiNact provider values
@@ -71,17 +78,31 @@ public class ValueMapperImpl implements ValueMapper {
 	private final SensinactDigitalTwin twin;
 	private final ProviderMapping mapping;
 	private final String providerModel;
+	private final Map<String, BiFunction<EObject, FeatureMapping, Object>> functionRegistry;
 
 	/**
 	 * Creates a new ValueMapper instance configured for a specific provider mapping and digital twin.
-	 * 
+	 *
 	 * @param twin The SensiNact digital twin to update with mapped values
 	 * @param mapping The ProviderMapping configuration defining the transformation rules
 	 */
 	public ValueMapperImpl(SensinactDigitalTwin twin, ProviderMapping mapping) {
+		this(twin, mapping, Collections.emptyMap());
+	}
+
+	/**
+	 * Creates a new ValueMapper instance with custom function registry.
+	 *
+	 * @param twin The SensiNact digital twin to update with mapped values
+	 * @param mapping The ProviderMapping configuration defining the transformation rules
+	 * @param functionRegistry Registry of function services keyed by functionId
+	 */
+	public ValueMapperImpl(SensinactDigitalTwin twin, ProviderMapping mapping,
+			Map<String, BiFunction<EObject, FeatureMapping, Object>> functionRegistry) {
 		this.twin = requireNonNull(twin, "Digital twin cannot be null");
 		this.mapping = requireNonNull(mapping, "Provider mapping cannot be null");
 		this.providerModel = determineProviderModel(mapping);
+		this.functionRegistry = functionRegistry != null ? functionRegistry : Collections.emptyMap();
 	}
 
 	@Override
@@ -141,6 +162,33 @@ public class ValueMapperImpl implements ValueMapper {
 				// Determine the source object for this service (may be from a collection)
 				EObject serviceSource = getServiceSource(sourceInstance, serviceMapping);
 
+				// Add auto-generated resources from ReferenceMapping if configured
+				if (serviceMapping.getReferencedResource() != null) {
+					try {
+						org.eclipse.sensinact.mapping.ReferenceMapping refMapping = serviceMapping.getReferencedResource();
+						EObject referencedObject = getReferencedSource(sourceInstance, refMapping,
+								"service: " + serviceMapping.getMid());
+
+						List<EStructuralFeature> attributesToMap = getFilteredAttributes(referencedObject.eClass(), refMapping);
+
+						for (EStructuralFeature attribute : attributesToMap) {
+							String resourcePath = serviceMapping.getMid() + "." + attribute.getName();
+							try {
+								Object value = referencedObject.eGet(attribute);
+								if (value != null) {
+									values.put(resourcePath, value);
+								}
+							} catch (Exception e) {
+								logger.warn("Failed to extract auto-generated value for resource path {}: {}",
+										resourcePath, e.getMessage());
+							}
+						}
+					} catch (ValueMappingException e) {
+						logger.warn("Failed to get referenced source for {}: {}", serviceMapping.getMid(), e.getMessage());
+					}
+				}
+
+				// Add explicitly defined resources
 				for (ResourceMapping resourceMapping : serviceMapping.getResources()) {
 					String resourcePath = serviceMapping.getMid() + "." + resourceMapping.getMid();
 
@@ -180,10 +228,15 @@ public class ValueMapperImpl implements ValueMapper {
 
 		// Validate feature paths for all resources
 		for (ServiceMapping serviceMapping : mapping.getServices()) {
-			// Validate collection configuration if present
-			if (serviceMapping.getCollectionFeature() != null) {
-				validateCollectionFeature(sourceInstance, serviceMapping, result);
+			// Validate ReferenceMapping if present (preferred approach)
+			if (serviceMapping.getReferencedResource() != null) {
+				validateReferenceMapping(sourceInstance, serviceMapping.getReferencedResource(),
+						"service: " + serviceMapping.getMid(), result);
 			}
+//			// Validate legacy collection configuration if present
+//			else if (serviceMapping.getCollectionFeature() != null) {
+//				validateCollectionFeature(sourceInstance, serviceMapping, result);
+//			}
 
 			// Get the service source for validation (may be from a collection)
 			EObject serviceSource;
@@ -203,50 +256,96 @@ public class ValueMapperImpl implements ValueMapper {
 	}
 
 	/**
-	 * Validates that a collection feature is properly configured and accessible.
+	 * Validates a ReferenceMapping configuration.
 	 */
-	private void validateCollectionFeature(EObject sourceInstance, ServiceMapping serviceMapping,
-			ValidationResultImpl result) {
-		EStructuralFeature collectionFeature = serviceMapping.getCollectionFeature();
+	private void validateReferenceMapping(EObject sourceInstance,
+			org.eclipse.sensinact.mapping.ReferenceMapping referenceMapping,
+			String context, ValidationResultImpl result) {
 
-		// Check that the feature exists on the source instance
-		if (!sourceInstance.eClass().getEAllStructuralFeatures().contains(collectionFeature)) {
-			result.addError(String.format("Collection feature '%s' not found on instance type %s (service: %s)",
-				collectionFeature.getName(), sourceInstance.eClass().getName(), serviceMapping.getMid()));
+		List<EStructuralFeature> featurePath = referenceMapping.getFeaturePath();
+
+		// Check that feature path is not empty
+		if (featurePath == null || featurePath.isEmpty()) {
+			result.addError(String.format("ReferenceMapping has no feature path (%s)", context));
 			return;
 		}
 
-		// Try to access the collection
+		// Try to navigate the feature path
 		try {
-			Object collectionValue = sourceInstance.eGet(collectionFeature);
+			Object targetValue = navigateFeaturePath(sourceInstance, featurePath, context);
 
-			if (!(collectionValue instanceof List<?>)) {
-				result.addError(String.format("Collection feature '%s' is not a list (service: %s)",
-					collectionFeature.getName(), serviceMapping.getMid()));
-				return;
-			}
+			// If target is a collection, validate index bounds
+			if (targetValue instanceof List<?>) {
+				List<?> collection = (List<?>) targetValue;
+				int index = referenceMapping.getCollectionIndex();
 
-			List<?> collection = (List<?>) collectionValue;
-			int index = serviceMapping.getCollectionIndex();
-
-			if (collection.isEmpty()) {
-				result.addWarning(String.format("Collection feature '%s' is empty (service: %s)",
-					collectionFeature.getName(), serviceMapping.getMid()));
-			} else if (index < 0 || index >= collection.size()) {
-				result.addError(String.format("Collection index %d out of bounds for collection '%s' of size %d (service: %s)",
-					index, collectionFeature.getName(), collection.size(), serviceMapping.getMid()));
-			} else {
-				Object element = collection.get(index);
-				if (!(element instanceof EObject)) {
-					result.addError(String.format("Collection element at index %d is not an EObject (service: %s)",
-						index, serviceMapping.getMid()));
+				if (collection.isEmpty()) {
+					result.addWarning(String.format("Referenced collection is empty (%s)", context));
+				} else if (index < 0 || index >= collection.size()) {
+					result.addError(String.format("Collection index %d out of bounds for collection of size %d (%s)",
+						index, collection.size(), context));
+				} else {
+					Object element = collection.get(index);
+					if (!(element instanceof EObject)) {
+						result.addError(String.format("Collection element at index %d is not an EObject (%s)",
+							index, context));
+					}
 				}
+			} else if (!(targetValue instanceof EObject)) {
+				result.addError(String.format("ReferenceMapping target is not an EObject (%s)", context));
 			}
-		} catch (Exception e) {
-			result.addError(String.format("Failed to access collection feature '%s' (service: %s): %s",
-				collectionFeature.getName(), serviceMapping.getMid(), e.getMessage()));
+
+		} catch (ValueMappingException e) {
+			result.addError(String.format("Failed to navigate ReferenceMapping (%s): %s", context, e.getMessage()));
 		}
 	}
+
+	/**
+	 * Validates that a collection feature is properly configured and accessible.
+	 * This is the legacy validation approach for backward compatibility.
+	 */
+//	private void validateCollectionFeature(EObject sourceInstance, ServiceMapping serviceMapping,
+//			ValidationResultImpl result) {
+//		EStructuralFeature collectionFeature = serviceMapping.getCollectionFeature();
+//
+//		// Check that the feature exists on the source instance
+//		if (!sourceInstance.eClass().getEAllStructuralFeatures().contains(collectionFeature)) {
+//			result.addError(String.format("Collection feature '%s' not found on instance type %s (service: %s)",
+//				collectionFeature.getName(), sourceInstance.eClass().getName(), serviceMapping.getMid()));
+//			return;
+//		}
+//
+//		// Try to access the collection
+//		try {
+//			Object collectionValue = sourceInstance.eGet(collectionFeature);
+//
+//			if (!(collectionValue instanceof List<?>)) {
+//				result.addError(String.format("Collection feature '%s' is not a list (service: %s)",
+//					collectionFeature.getName(), serviceMapping.getMid()));
+//				return;
+//			}
+//
+//			List<?> collection = (List<?>) collectionValue;
+//			int index = serviceMapping.getCollectionIndex();
+//
+//			if (collection.isEmpty()) {
+//				result.addWarning(String.format("Collection feature '%s' is empty (service: %s)",
+//					collectionFeature.getName(), serviceMapping.getMid()));
+//			} else if (index < 0 || index >= collection.size()) {
+//				result.addError(String.format("Collection index %d out of bounds for collection '%s' of size %d (service: %s)",
+//					index, collectionFeature.getName(), collection.size(), serviceMapping.getMid()));
+//			} else {
+//				Object element = collection.get(index);
+//				if (!(element instanceof EObject)) {
+//					result.addError(String.format("Collection element at index %d is not an EObject (service: %s)",
+//						index, serviceMapping.getMid()));
+//				}
+//			}
+//		} catch (Exception e) {
+//			result.addError(String.format("Failed to access collection feature '%s' (service: %s): %s",
+//				collectionFeature.getName(), serviceMapping.getMid(), e.getMessage()));
+//		}
+//	}
 
 	/**
 	 * Extracts a value from an EObject instance using a ResourceMapping configuration.
@@ -277,8 +376,12 @@ public class ValueMapperImpl implements ValueMapper {
 
 	/**
 	 * Maps all resources for a specific service.
+	 * Handles both explicitly defined resources and automatically generated resources from ReferenceMapping.
+	 *
+	 * Note: Auto-generated ResourceMappings from ReferenceMapping are created during model registration
+	 * by ProviderModelSensinactMapper and are already present in serviceMapping.getResources().
 	 */
-	private void mapServiceResources(EObject sourceInstance, ServiceMapping serviceMapping, 
+	private void mapServiceResources(EObject sourceInstance, ServiceMapping serviceMapping,
 			SensinactProvider provider, Instant timestamp) throws ValueMappingException {
 
 		SensinactService service = provider.getServices().get(serviceMapping.getMid());
@@ -286,9 +389,225 @@ public class ValueMapperImpl implements ValueMapper {
 			throw new ValueMappingException("Service not found: " + serviceMapping.getMid());
 		}
 
+		// Map all resources (both auto-generated and explicitly defined)
+		// Auto-generated resources are already in the list thanks to ProviderModelSensinactMapper
 		for (ResourceMapping resourceMapping : serviceMapping.getResources()) {
 			mapSingleResource(sourceInstance, resourceMapping, service, timestamp);
 		}
+	}
+
+	/**
+	 * Maps automatically generated resources based on ReferenceMapping configuration.
+	 * Extracts all attributes from the referenced object (applying filter/exclude rules)
+	 * and maps them as resources. Also handles nested EReferences if referenceMappings are configured.
+	 */
+	private void mapAutoGeneratedResources(EObject sourceInstance, ServiceMapping serviceMapping,
+			SensinactService service, Instant timestamp) throws ValueMappingException {
+
+		org.eclipse.sensinact.mapping.ReferenceMapping refMapping = serviceMapping.getReferencedResource();
+
+//		// Get the referenced object
+//		EObject referencedObject = getReferencedSource(sourceInstance, refMapping,
+//				"service: " + serviceMapping.getMid());
+
+		// Map attributes and nested references recursively
+		int totalMapped = mapAttributesAndReferences(sourceInstance, refMapping, service, timestamp,
+				serviceMapping.getResources(), "");
+
+		logger.debug("Mapped {} auto-generated resources for service {} from referenced object",
+				totalMapped, serviceMapping.getMid());
+	}
+
+	/**
+	 * Recursively maps attributes and nested references from an object.
+	 *
+	 * @param sourceObject The object to extract attributes from
+	 * @param refMapping The ReferenceMapping configuration
+	 * @param service The SensiNact service to add resources to
+	 * @param timestamp The timestamp for values
+	 * @param resourceList The list to add generated ResourceMappings to
+	 * @param namePrefix Prefix for resource names (e.g., "station" for nested references)
+	 * @return The total number of resources mapped
+	 */
+	private int mapAttributesAndReferences(EObject sourceObject,
+			org.eclipse.sensinact.mapping.ReferenceMapping refMapping,
+			SensinactService service, Instant timestamp,
+			EList<ResourceMapping> resourceList, String namePrefix) throws ValueMappingException {
+
+		int mappedCount = 0;
+
+		// 1. Map all filtered attributes from this object
+		List<EStructuralFeature> attributesToMap = getFilteredAttributes(sourceObject.eClass(), refMapping);
+		for (EStructuralFeature attribute : attributesToMap) {
+			String resourceName = namePrefix.isEmpty() ? attribute.getName() : namePrefix + capitalize(attribute.getName());
+			ResourceMapping resourceMapping = mapAttributeAsResource(sourceObject, attribute, service, timestamp, resourceName);
+			resourceList.add(resourceMapping);
+			mappedCount++;
+		}
+
+		// 2. Handle nested EReferences if referenceMappings are configured
+		if (refMapping.getReferenceMappings() != null && !refMapping.getReferenceMappings().isEmpty()) {
+			// Get all EReferences from the source object
+			List<EReference> allReferences = sourceObject.eClass().getEAllReferences();
+
+			for (org.eclipse.sensinact.mapping.ReferenceMapping nestedMapping : refMapping.getReferenceMappings()) {
+				// Find the EReference that this nested mapping targets
+				EReference targetReference = findTargetReference(allReferences, nestedMapping);
+				if (targetReference == null) {
+					logger.warn("Could not find target EReference for nested ReferenceMapping in {}",
+							sourceObject.eClass().getName());
+					continue;
+				}
+
+				// Get the referenced object(s)
+				Object refValue = sourceObject.eGet(targetReference);
+				if (refValue == null) {
+					logger.debug("EReference '{}' is null, skipping nested mapping", targetReference.getName());
+					continue;
+				}
+
+				// Handle single reference (not a collection)
+				if (refValue instanceof EObject) {
+					EObject nestedObject = (EObject) refValue;
+					String nestedPrefix = namePrefix.isEmpty() ?
+							targetReference.getName() :
+							namePrefix + capitalize(targetReference.getName());
+
+					// Recursively map attributes from the nested object
+					int nestedCount = mapAttributesAndReferences(nestedObject, nestedMapping, service,
+							timestamp, resourceList, nestedPrefix);
+					mappedCount += nestedCount;
+				} else {
+					logger.warn("EReference '{}' is a collection, collections in nested references not yet supported",
+							targetReference.getName());
+				}
+			}
+		}
+
+		return mappedCount;
+	}
+
+	/**
+	 * Finds the EReference that a ReferenceMapping is targeting.
+	 * Uses the featurePath from the ReferenceMapping to identify the target.
+	 */
+	private EReference findTargetReference(List<EReference> allReferences,
+			org.eclipse.sensinact.mapping.ReferenceMapping nestedMapping) {
+
+		List<EStructuralFeature> featurePath = nestedMapping.getFeaturePath();
+		if (featurePath == null || featurePath.isEmpty()) {
+			return null;
+		}
+
+		// The first element in the feature path should be the EReference we're looking for
+		EStructuralFeature firstFeature = featurePath.get(0);
+		if (firstFeature instanceof EReference) {
+			EReference targetRef = (EReference) firstFeature;
+			// Verify it's in the list of available references
+			if (allReferences.contains(targetRef)) {
+				return targetRef;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Capitalizes the first letter of a string (used for building nested resource names).
+	 */
+	private String capitalize(String str) {
+		if (str == null || str.isEmpty()) {
+			return str;
+		}
+		return str.substring(0, 1).toUpperCase() + str.substring(1);
+	}
+
+	/**
+	 * Returns the list of attributes to map based on ReferenceMapping filter configuration.
+	 *
+	 * @param eClass The EClass of the referenced object
+	 * @param refMapping The ReferenceMapping with filter configuration
+	 * @return List of attributes that should be mapped
+	 */
+	private List<EStructuralFeature> getFilteredAttributes(EClass eClass,
+			org.eclipse.sensinact.mapping.ReferenceMapping refMapping) {
+
+		// Get all attributes from the EClass
+		List<EAttribute> allAttributes = eClass.getEAllAttributes();
+		List<EAttribute> filterList = refMapping.getFilter();
+		boolean exclude = refMapping.isExclude();
+
+		// If no filter is specified
+		if (filterList == null || filterList.isEmpty()) {
+			// exclude=true (default): include all attributes
+			// exclude=false: include nothing (no attributes specified)
+			return exclude ? new java.util.ArrayList<>(allAttributes) : Collections.emptyList();
+		}
+
+		List<EStructuralFeature> result = new java.util.ArrayList<>();
+
+		if (exclude) {
+			// exclude=true: include all attributes EXCEPT those in filter
+			for (EStructuralFeature attr : allAttributes) {
+				if (!filterList.contains(attr)) {
+					result.add(attr);
+				}
+			}
+		} else {
+			// exclude=false: include ONLY those attributes in filter
+			for (EStructuralFeature attr : filterList) {
+				if (allAttributes.contains(attr)) {
+					result.add(attr);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Maps a single EAttribute as a resource in the service.
+	 * For auto-generated resources from ReferenceMapping, automatically creates a descriptionMapping
+	 * that uses the "extractGenModelDoc" function to extract documentation from the EAttribute's
+	 * GenModel annotations.
+	 *
+	 * @param sourceObject The object containing the attribute
+	 * @param attribute The attribute to map
+	 * @param service The SensiNact service to add the resource to
+	 * @param timestamp The timestamp for the value
+	 * @param resourceName The name to use for the resource (e.g., "stationName" for nested attributes)
+	 * @return The created ResourceMapping
+	 */
+	private ResourceMapping mapAttributeAsResource(EObject sourceObject, EStructuralFeature attribute,
+			SensinactService service, Instant timestamp, String resourceName) {
+
+		ResourceMapping resourceMapping = MappingFactory.eINSTANCE.createResourceMapping();
+		resourceMapping.setMid(resourceName);
+
+		// Set up description mapping if GenModelDocExtractor is available
+		if (attribute instanceof EAttribute) {
+			NameMapping descriptionMapping = createDescriptionMapping((EAttribute) attribute);
+			resourceMapping.setDescriptionMapping(descriptionMapping);
+		}
+
+		return resourceMapping;
+	}
+
+	/**
+	 * Creates a NameMapping for extracting documentation from an EAttribute.
+	 * The mapping is configured with:
+	 * - functionId: "extractGenModelDoc"
+	 * - featurePath: [attribute] - points to the EAttribute itself
+	 *
+	 * @param attribute The EAttribute to create a description mapping for
+	 * @return A configured NameMapping
+	 */
+	private NameMapping createDescriptionMapping(EAttribute attribute) {
+		NameMapping descriptionMapping = MappingFactory.eINSTANCE.createNameMapping();
+		descriptionMapping.setFunctionId("extractGenModelDoc");
+		// Add the attribute itself to the feature path
+		descriptionMapping.getFeaturePath().add(attribute);
+		return descriptionMapping;
 	}
 
 	/**
@@ -298,6 +617,7 @@ public class ValueMapperImpl implements ValueMapper {
 			SensinactService service, Instant timestamp) throws ValueMappingException {
 
 		SensinactResource resource = service.getResources().get(resourceMapping.getMid());
+		
 		if (resource == null) {
 			throw new ValueMappingException("Resource not found: " + resourceMapping.getMid());
 		}
@@ -315,6 +635,7 @@ public class ValueMapperImpl implements ValueMapper {
 			logger.debug("No value extracted for resource {}.{}", service.getName(), resource.getName());
 		}
 	}
+
 
 	/**
 	 * Maps admin service values.
@@ -651,8 +972,9 @@ public class ValueMapperImpl implements ValueMapper {
 
 	/**
 	 * Determines the source EObject for a specific service based on collection configuration.
-	 * If the service has a collectionFeature set, extracts the element at collectionIndex from that collection.
-	 * Otherwise, returns the root source object.
+	 * First checks if referencedResource (ReferenceMapping) is set - this is the preferred approach.
+	 * Falls back to legacy collectionFeature approach for backward compatibility.
+	 * If neither is configured, returns the root source object.
 	 *
 	 * @param rootSource The root source object
 	 * @param serviceMapping The service mapping configuration
@@ -662,65 +984,184 @@ public class ValueMapperImpl implements ValueMapper {
 	private EObject getServiceSource(EObject rootSource, ServiceMapping serviceMapping)
 			throws ValueMappingException {
 
-		// If no collection feature is configured, use the root source directly
-		if (serviceMapping.getCollectionFeature() == null) {
-			return rootSource;
+		// New approach: Check if referencedResource is configured
+		if (serviceMapping.getReferencedResource() != null) {
+			return getReferencedSource(rootSource, serviceMapping.getReferencedResource(),
+					"service: " + serviceMapping.getMid());
 		}
 
-		// Collection-based mapping: extract the specific element for this service
-		EStructuralFeature collectionFeature = serviceMapping.getCollectionFeature();
-		Object collectionValue = rootSource.eGet(collectionFeature);
+		// No collection configuration: use root source directly
+		return rootSource;
+	}
 
-		// Ensure the feature is actually a collection
-		if (!(collectionValue instanceof List<?>)) {
+//	/**
+//	 * Legacy implementation for backward compatibility with collectionFeature approach.
+//	 */
+//	private EObject getServiceSourceLegacy(EObject rootSource, ServiceMapping serviceMapping)
+//			throws ValueMappingException {
+//
+//		// Collection-based mapping: extract the specific element for this service
+//		EStructuralFeature collectionFeature = serviceMapping.getCollectionFeature();
+//		Object collectionValue = rootSource.eGet(collectionFeature);
+//
+//		// Ensure the feature is actually a collection
+//		if (!(collectionValue instanceof List<?>)) {
+//			throw new ValueMappingException(
+//				String.format("Collection feature '%s' is not a list (service: %s)",
+//					collectionFeature.getName(), serviceMapping.getMid()));
+//		}
+//
+//		List<?> collection = (List<?>) collectionValue;
+//
+//		// Validate collection is not empty
+//		if (collection.isEmpty()) {
+//			throw new ValueMappingException(
+//				String.format("Collection feature '%s' is empty (service: %s)",
+//					collectionFeature.getName(), serviceMapping.getMid()));
+//		}
+//
+//		// Get the index (default is 0)
+//		int index = serviceMapping.getCollectionIndex();
+//
+//		// Check if collectionFilter is set (takes precedence over index)
+//		if (serviceMapping.getCollectionFilter() != null &&
+//			!serviceMapping.getCollectionFilter().trim().isEmpty()) {
+//			// Future extension: evaluate filter expression
+//			logger.warn("collectionFilter not yet implemented for service {}, using collectionIndex",
+//				serviceMapping.getMid());
+//		}
+//
+//		// Validate index bounds
+//		if (index < 0 || index >= collection.size()) {
+//			throw new ValueMappingException(
+//				String.format("Collection index %d out of bounds for collection '%s' of size %d (service: %s)",
+//					index, collectionFeature.getName(), collection.size(), serviceMapping.getMid()));
+//		}
+//
+//		// Extract the element
+//		Object element = collection.get(index);
+//		if (!(element instanceof EObject)) {
+//			throw new ValueMappingException(
+//				String.format("Collection element at index %d is not an EObject (service: %s)",
+//					index, serviceMapping.getMid()));
+//		}
+//
+//		logger.debug("Service '{}' mapping from collection '{}' at index {}",
+//			serviceMapping.getMid(), collectionFeature.getName(), index);
+//
+//		return (EObject) element;
+//	}
+
+	/**
+	 * Navigates a ReferenceMapping to extract the target EObject.
+	 * Handles both single-valued and multi-valued references, applying collection index/filter as needed.
+	 *
+	 * @param source The source EObject to start navigation from
+	 * @param referenceMapping The ReferenceMapping configuration
+	 * @param context Context string for error messages (e.g., "service: weather")
+	 * @return The target EObject
+	 * @throws ValueMappingException If navigation fails
+	 */
+	private EObject getReferencedSource(EObject source, org.eclipse.sensinact.mapping.ReferenceMapping referenceMapping,
+			String context) throws ValueMappingException {
+
+		List<EStructuralFeature> featurePath = referenceMapping.getFeaturePath();
+		if (featurePath == null || featurePath.isEmpty()) {
 			throw new ValueMappingException(
-				String.format("Collection feature '%s' is not a list (service: %s)",
-					collectionFeature.getName(), serviceMapping.getMid()));
+				String.format("ReferenceMapping has no feature path (%s)", context));
 		}
 
-		List<?> collection = (List<?>) collectionValue;
+		// Navigate to the target (might be a collection or single object)
+		Object targetValue = navigateFeaturePath(source, featurePath, context);
 
-		// Validate collection is not empty
-		if (collection.isEmpty()) {
+		// If it's a collection, apply collection index/filter
+		if (targetValue instanceof List<?>) {
+			List<?> collection = (List<?>) targetValue;
+
+			if (collection.isEmpty()) {
+				throw new ValueMappingException(
+					String.format("Referenced collection is empty (%s)", context));
+			}
+
+			// Check if collectionFilter is set (takes precedence over index)
+			if (referenceMapping.getCollectionFilter() != null &&
+				!referenceMapping.getCollectionFilter().trim().isEmpty()) {
+				// Future extension: evaluate filter expression
+				logger.warn("collectionFilter not yet implemented ({}), using collectionIndex", context);
+			}
+
+			int index = referenceMapping.getCollectionIndex();
+			if (index < 0 || index >= collection.size()) {
+				throw new ValueMappingException(
+					String.format("Collection index %d out of bounds for collection of size %d (%s)",
+						index, collection.size(), context));
+			}
+
+			targetValue = collection.get(index);
+			logger.debug("ReferenceMapping: extracted element at index {} ({})", index, context);
+		}
+
+		if (!(targetValue instanceof EObject)) {
 			throw new ValueMappingException(
-				String.format("Collection feature '%s' is empty (service: %s)",
-					collectionFeature.getName(), serviceMapping.getMid()));
+				String.format("Referenced target is not an EObject (%s)", context));
 		}
 
-		// Get the index (default is 0)
-		int index = serviceMapping.getCollectionIndex();
+		return (EObject) targetValue;
+	}
 
-		// Check if collectionFilter is set (takes precedence over index)
-		if (serviceMapping.getCollectionFilter() != null &&
-			!serviceMapping.getCollectionFilter().trim().isEmpty()) {
-			// Future extension: evaluate filter expression
-			logger.warn("collectionFilter not yet implemented for service {}, using collectionIndex",
-				serviceMapping.getMid());
-		}
+	/**
+	 * Navigates a feature path from a source object to retrieve the target value.
+	 * Does not handle collection indexing - that's done by the caller.
+	 *
+	 * @param source The source EObject
+	 * @param featurePath The path of features to traverse
+	 * @param context Context string for error messages
+	 * @return The value at the end of the path
+	 * @throws ValueMappingException If navigation fails
+	 */
+	private Object navigateFeaturePath(EObject source, List<EStructuralFeature> featurePath, String context)
+			throws ValueMappingException {
 
-		// Validate index bounds
-		if (index < 0 || index >= collection.size()) {
+		Object currentValue = source;
+		try {
+			for (int i = 0; i < featurePath.size(); i++) {
+				EStructuralFeature feature = featurePath.get(i);
+
+				if (!(currentValue instanceof EObject)) {
+					throw new ValueMappingException(
+						String.format("Cannot navigate feature '%s': current value is not an EObject (%s)",
+							feature.getName(), context));
+				}
+
+				currentValue = ((EObject) currentValue).eGet(feature);
+
+				if (currentValue == null) {
+					throw new ValueMappingException(
+						String.format("Feature '%s' returned null during path navigation (%s)",
+							feature.getName(), context));
+				}
+
+				// For intermediate steps, if we encounter a list, we should not be here
+				// (ReferenceMapping should only have collections as the final step)
+				if (i < featurePath.size() - 1 && currentValue instanceof List<?>) {
+					throw new ValueMappingException(
+						String.format("Unexpected collection at intermediate step '%s' (%s)",
+							feature.getName(), context));
+				}
+			}
+			return currentValue;
+		} catch (ValueMappingException e) {
+			throw e;
+		} catch (Exception e) {
 			throw new ValueMappingException(
-				String.format("Collection index %d out of bounds for collection '%s' of size %d (service: %s)",
-					index, collectionFeature.getName(), collection.size(), serviceMapping.getMid()));
+				String.format("Failed to navigate feature path (%s): %s", context, e.getMessage()), e);
 		}
-
-		// Extract the element
-		Object element = collection.get(index);
-		if (!(element instanceof EObject)) {
-			throw new ValueMappingException(
-				String.format("Collection element at index %d is not an EObject (service: %s)",
-					index, serviceMapping.getMid()));
-		}
-
-		logger.debug("Service '{}' mapping from collection '{}' at index {}",
-			serviceMapping.getMid(), collectionFeature.getName(), index);
-
-		return (EObject) element;
 	}
 
 	/**
 	 * Traverses a path of {@link EStructuralFeature}s to retrieve a raw, untyped value.
+	 * First checks if a functionId is specified and invokes the registered function.
+	 * If no function is found or no functionId is specified, falls back to feature path traversal.
 	 * Handles multi-value features by using the collectionIndex from the FeatureMapping.
 	 *
 	 * @param source         The starting object.
@@ -732,6 +1173,26 @@ public class ValueMapperImpl implements ValueMapper {
 			return Optional.empty();
 		}
 
+		// First priority: Check if a functionId is specified
+		String functionId = featureMapping.getFunctionId();
+		if (functionId != null && !functionId.trim().isEmpty()) {
+			BiFunction<EObject, FeatureMapping, Object> function = functionRegistry.get(functionId);
+			if (function != null) {
+				try {
+					Object result = function.apply(source, featureMapping);
+					return Optional.ofNullable(result);
+				} catch (Exception e) {
+					logger.warn("Function '{}' failed for source {}: {}",
+							functionId, source.eClass().getName(), e.getMessage());
+					// Fall through to feature path if function fails
+				}
+			} else {
+				logger.warn("Function '{}' not found in registry", functionId);
+				// Fall through to feature path if function not found
+			}
+		}
+
+		// Second priority: Use feature path if available
 		List<EStructuralFeature> featurePath = featureMapping.getFeaturePath();
 		if (featurePath == null || featurePath.isEmpty()) {
 			return Optional.empty();

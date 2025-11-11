@@ -173,22 +173,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="ServiceMapping" eSuperTypes="#//Mapping">
     <eStructuralFeatures xsi:type="ecore:EReference" name="resources" upperBound="-1"
         eType="#//ResourceMapping" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="collectionFeature" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Optional reference to a collection feature in the source object. When set, this service will map from a specific element within that collection, selected by collectionIndex or collectionFilter.&#xA;This enables flexible mapping scenarios where different services map from different collections:&#xA;- Service A maps from sourceObject.hourlyReports[0]&#xA;- Service B maps from sourceObject.dailyReports[0]&#xA;- Service C maps directly from sourceObject (no collection)&#xA;&#xA;Example: In a weather scenario where WeatherReports contains both 'reports' and 'forecasts' collections, currentWeather service can map from reports[0] while weeklyForecast service maps from forecasts[0].&#xA;&#xA;If not set, the service maps directly from the source instance passed to the mapper."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="collectionIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        defaultValueLiteral="0">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="When collectionFeature is set, specifies which element index from that collection to use as the source for this service. Default is 0 (first element).&#xA;For example, if collectionFeature points to 'reports', setting collectionIndex=0 uses reports[0], while collectionIndex=1 uses reports[1].&#xA;This attribute is ignored if collectionFeature is not set."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="collectionFilter" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Optional filter expression to select a specific element from the collection instead of using a fixed index. The expression syntax and evaluation mechanism are implementation-specific.&#xA;If both collectionIndex and collectionFilter are set, collectionFilter takes precedence.&#xA;This allows for more dynamic selection criteria, such as 'select the element with the earliest timestamp' or 'select the element where type=CURRENT'.&#xA;This attribute is ignored if collectionFeature is not set."/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="referencedResource" eType="#//ReferenceMapping"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ResourceMapping" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EAttribute">
@@ -208,11 +192,10 @@
         eType="#//TimestampMapping"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mid" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="descriptionFeature" upperBound="-1"
-        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extraMetadata" upperBound="-1"
         eType="#//StringToStringMap" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="descriptionMapping" eType="#//NameMapping"
+        derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AdminMapping" eSuperTypes="#//ServiceMapping">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="friendlyName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -228,8 +211,6 @@
         eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="elevationRef" upperBound="-1"
         eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EStructuralFeature"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="friendlyName" eType="#//NameMapping"
-        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MetadataMapping"/>
   <eClassifiers xsi:type="ecore:EDataType" name="JavaStringFunction" instanceTypeName="java.util.function.Function&lt;org.eclipse.emf.ecore.EObject, java.lang.String>"
@@ -322,11 +303,19 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReferenceMapping" eSuperTypes="#//FeatureMapping">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Defines a reference-based mapping that automatically generates resources from attributes of the referenced type."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="filter" upperBound="-1"
         eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="exclude" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="referenceMappings" upperBound="-1"
         eType="#//ReferenceMapping" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetEClass" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClass">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Optional specification of the concrete EClass to use for generating resources.&#xA;If not set, the declared type of the feature path's target will be used.&#xA;This is useful when the feature has a base type but you know instances will be of a specific subtype.&#xA;&#xA;Example: If 'reports' is declared as WeatherReport[] but you know instances are MOSMIXWeatherReport,&#xA;set targetEClass to MOSMIXWeatherReport to generate resources from its attributes."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>

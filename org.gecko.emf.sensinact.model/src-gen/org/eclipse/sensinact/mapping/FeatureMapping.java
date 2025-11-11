@@ -32,6 +32,7 @@ import org.osgi.annotation.versioning.ProviderType;
  *   <li>{@link org.eclipse.sensinact.mapping.FeatureMapping#getFunctionId <em>Function Id</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.FeatureMapping#getFeaturePath <em>Feature Path</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.FeatureMapping#getCollectionIndex <em>Collection Index</em>}</li>
+ *   <li>{@link org.eclipse.sensinact.mapping.FeatureMapping#getCollectionFilter <em>Collection Filter</em>}</li>
  * </ul>
  *
  * @see org.eclipse.sensinact.mapping.MappingPackage#getFeatureMapping()
@@ -104,5 +105,33 @@ public interface FeatureMapping extends EObject {
 	 * @generated
 	 */
 	void setCollectionIndex(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Collection Filter</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Optional filter expression to select a specific element from the collection instead of using a fixed index. The expression syntax and evaluation mechanism are implementation-specific.
+	 * If both collectionIndex and collectionFilter are set, collectionFilter takes precedence.
+	 * This allows for more dynamic selection criteria, such as 'select the element with the earliest timestamp' or 'select the element where type=CURRENT'.
+	 * This attribute is ignored if collectionFeature is not set.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Collection Filter</em>' attribute.
+	 * @see #setCollectionFilter(String)
+	 * @see org.eclipse.sensinact.mapping.MappingPackage#getFeatureMapping_CollectionFilter()
+	 * @model
+	 * @generated
+	 */
+	String getCollectionFilter();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.sensinact.mapping.FeatureMapping#getCollectionFilter <em>Collection Filter</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Collection Filter</em>' attribute.
+	 * @see #getCollectionFilter()
+	 * @generated
+	 */
+	void setCollectionFilter(String value);
 
 } // FeatureMapping

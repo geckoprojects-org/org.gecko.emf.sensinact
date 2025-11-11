@@ -60,9 +60,7 @@
     </genClasses>
     <genClasses ecoreClass="sensinact-mapping.ecore#//ServiceMapping">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ServiceMapping/resources"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ServiceMapping/collectionFeature"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//ServiceMapping/collectionIndex"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//ServiceMapping/collectionFilter"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ServiceMapping/referencedResource"/>
     </genClasses>
     <genClasses ecoreClass="sensinact-mapping.ecore#//ResourceMapping">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//ResourceMapping/unit"/>
@@ -70,9 +68,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ResourceMapping/valueFeature"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ResourceMapping/timestamp"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//ResourceMapping/mid"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//ResourceMapping/description"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ResourceMapping/descriptionFeature"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ResourceMapping/extraMetadata"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ResourceMapping/descriptionMapping"/>
       <genOperations ecoreOperation="sensinact-mapping.ecore#//ResourceMapping/mapUnit"
           body="&lt;%java.util.Objects%>.requireNonNull(unitFunction);&#xA;Objects.requireNonNull(eobject);&#xA;setUnit(unitFunction.apply(eobject));">
         <genParameters ecoreParameter="sensinact-mapping.ecore#//ResourceMapping/mapUnit/eobject"/>
@@ -110,6 +107,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//FeatureMapping/functionId"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//FeatureMapping/featurePath"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//FeatureMapping/collectionIndex"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//FeatureMapping/collectionFilter"/>
     </genClasses>
     <genClasses ecoreClass="sensinact-mapping.ecore#//TimestampMapping">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//TimestampMapping/strategy"/>
@@ -125,6 +123,12 @@
     <genClasses ecoreClass="sensinact-mapping.ecore#//StringToStringMap">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//StringToStringMap/key"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//StringToStringMap/value"/>
+    </genClasses>
+    <genClasses ecoreClass="sensinact-mapping.ecore#//ReferenceMapping">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ReferenceMapping/filter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//ReferenceMapping/exclude"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ReferenceMapping/referenceMappings"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ReferenceMapping/targetEClass"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

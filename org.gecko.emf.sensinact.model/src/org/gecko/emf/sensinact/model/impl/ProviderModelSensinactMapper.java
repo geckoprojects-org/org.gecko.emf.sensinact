@@ -17,9 +17,11 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.sensinact.core.emf.model.EMFModel;
@@ -39,6 +41,7 @@ import org.eclipse.sensinact.mapping.ProviderStrategy;
 import org.eclipse.sensinact.mapping.ResourceMapping;
 import org.eclipse.sensinact.mapping.ServiceMapping;
 import org.gecko.emf.sensinact.model.MappingProfileRegistry;
+import org.gecko.emf.sensinact.model.SensinactMapperConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +51,18 @@ import org.slf4j.LoggerFactory;
  * @since 16.07.2025
  */
 public class ProviderModelSensinactMapper {
+	
+	/**
+	 * GenModel annotation source URI.
+	 */
+	private static final String GENMODEL_ANNOTATION = "http://www.eclipse.org/emf/2002/GenModel";
+
+	/**
+	 * Documentation detail key in GenModel annotations.
+	 */
+	private static final String DOCUMENTATION_KEY = "documentation";
+	
+	
 
 	private static final Logger logger = LoggerFactory.getLogger(ProviderModelSensinactMapper.class);
 	private final SensinactEMFModelManager modelManager;
@@ -225,38 +240,6 @@ public class ProviderModelSensinactMapper {
 		}
 	}
 
-//	/**
-//	 * Maps the admin service
-//	 * @param model the {@link Model}
-//	 * @param adminMapping the {@link AdminMapping}
-//	 */
-//	private Service mapAdminService(EMFModel model, AdminMapping adminMapping) {
-//		requireNonNull(adminMapping);
-//		final Instant timestamp = Instant.now();
-//		Service admin = mapService(model, adminMapping);
-//		EClass adminClass = (EClass) model.getModelEClass().getEStructuralFeature("admin").getEType();
-//		EAttribute friendlyNameAttr = (EAttribute) adminClass.getEStructuralFeature("friendlyName");
-//		friendlyNameAttr.setDefaultValueLiteral("test");
-//		if (nonNull(adminMapping.getFriendlyName()) && model instanceof EMFModel em) {
-//			admin.createResource("friendlyName").
-//			withResourceType(ResourceType.PROPERTY).
-//			withType(String.class).
-//			withInitialValue(adminMapping.getFriendlyName(), timestamp).
-//			build();
-//		}
-//		final GeoJsonObject location = lookupLocation(adminMapping);
-//		if (nonNull(location)) {
-//			EAttribute locationAttr = (EAttribute) adminClass.getEStructuralFeature("location");
-//			locationAttr.setDefaultValue(location);
-//			admin.createResource("location").
-//			withResourceType(ResourceType.PROPERTY).
-//			withType(GeoJsonObject.class).
-//			withInitialValue(location, timestamp).
-//			build();
-//		}
-//		return admin;
-//	}
-
 	/**
 	 * Maps into a sensinact {@link Service}
 	 * @param model the {@link Model}
@@ -267,10 +250,224 @@ public class ProviderModelSensinactMapper {
 		if (isNull(service)) {
 			service = model.createService(serviceMapping.getMid()).build();
 		}
+
+		// Auto-generate ResourceMappings from ReferenceMapping if configured
+		if (serviceMapping.getReferencedResource() != null) {
+			generateResourcesFromReferenceMapping(serviceMapping);
+		}
+
 		for (ResourceMapping resourceMapping : serviceMapping.getResources()) {
 			mapResource(service, resourceMapping);
 		}
 		return service;
+	}
+
+	/**
+	 * Generates ResourceMapping objects from a ReferenceMapping configuration.
+	 * This auto-generates resources for all attributes of the referenced type.
+	 *
+	 * @param serviceMapping the service mapping containing the ReferenceMapping
+	 */
+	private void generateResourcesFromReferenceMapping(ServiceMapping serviceMapping) {
+		org.eclipse.sensinact.mapping.ReferenceMapping refMapping = serviceMapping.getReferencedResource();
+
+		// Determine the target EClass
+		org.eclipse.emf.ecore.EClass targetClass = null;
+
+		// First priority: Check if targetEClass is explicitly set
+		if (refMapping.getTargetEClass() != null) {
+			targetClass = refMapping.getTargetEClass();
+			logger.debug("Using explicitly specified targetEClass: {} for service {}",
+					targetClass.getName(), serviceMapping.getMid());
+		} else {
+			// Second priority: Infer from the feature path
+			if (refMapping.getFeaturePath() == null || refMapping.getFeaturePath().isEmpty()) {
+				logger.warn("ReferenceMapping has no feature path and no targetEClass for service {}",
+						serviceMapping.getMid());
+				return;
+			}
+
+			// Get the EClass of the referenced type by looking at the last feature in the path
+			org.eclipse.emf.ecore.EStructuralFeature lastFeature = refMapping.getFeaturePath()
+					.get(refMapping.getFeaturePath().size() - 1);
+			org.eclipse.emf.ecore.EClassifier targetType = lastFeature.getEType();
+
+			if (!(targetType instanceof org.eclipse.emf.ecore.EClass)) {
+				logger.warn("ReferenceMapping target is not an EClass for service {}", serviceMapping.getMid());
+				return;
+			}
+
+			targetClass = (org.eclipse.emf.ecore.EClass) targetType;
+			logger.debug("Inferred targetEClass from feature path: {} for service {}",
+					targetClass.getName(), serviceMapping.getMid());
+		}
+
+		// Generate resources recursively, passing the base feature path from the ReferenceMapping
+		generateResourcesFromEClass(targetClass, refMapping, serviceMapping.getResources(), "",
+				new java.util.ArrayList<>(refMapping.getFeaturePath()), false);
+	}
+
+	/**
+	 * Recursively generates ResourceMapping objects from an EClass and ReferenceMapping.
+	 *
+	 * @param eClass the EClass to extract attributes from
+	 * @param refMapping the ReferenceMapping configuration
+	 * @param resourceList the list to add generated ResourceMappings to
+	 * @param namePrefix prefix for resource names (e.g., "station" for nested references)
+	 * @param baseFeaturePath the base feature path from the root object to the current object
+	 */
+	private void generateResourcesFromEClass(org.eclipse.emf.ecore.EClass eClass,
+			org.eclipse.sensinact.mapping.ReferenceMapping refMapping,
+			org.eclipse.emf.common.util.EList<ResourceMapping> resourceList,
+			String namePrefix,
+			java.util.List<org.eclipse.emf.ecore.EStructuralFeature> baseFeaturePath, boolean nested) {
+
+		// Get filtered attributes
+		java.util.List<org.eclipse.emf.ecore.EAttribute> allAttributes = eClass.getEAllAttributes();
+		java.util.List<org.eclipse.emf.ecore.EAttribute> filterList = refMapping.getFilter();
+		boolean exclude = refMapping.isExclude();
+
+		// Build the list of attributes to map
+		java.util.List<org.eclipse.emf.ecore.EAttribute> attributesToMap = new java.util.ArrayList<>();
+
+		if (filterList == null || filterList.isEmpty()) {
+			// No filter: include all if exclude=true, nothing if exclude=false
+			if (exclude) {
+				attributesToMap.addAll(allAttributes);
+			}
+		} else {
+			if (exclude) {
+				// exclude=true: include all attributes EXCEPT those in filter
+				for (org.eclipse.emf.ecore.EAttribute attr : allAttributes) {
+					if (!filterList.contains(attr)) {
+						attributesToMap.add(attr);
+					}
+				}
+			} else {
+				// exclude=false: include ONLY those attributes in filter
+				for (org.eclipse.emf.ecore.EAttribute attr : filterList) {
+					if (allAttributes.contains(attr)) {
+						attributesToMap.add(attr);
+					}
+				}
+			}
+		}
+
+		// Generate ResourceMapping for each attribute
+		for (org.eclipse.emf.ecore.EAttribute attribute : attributesToMap) {
+			String resourceName = namePrefix.isEmpty() ?
+					attribute.getName() :
+					namePrefix + capitalize(attribute.getName());
+
+			ResourceMapping resourceMapping = org.eclipse.sensinact.mapping.MappingFactory.eINSTANCE.createResourceMapping();
+			resourceMapping.setMid(resourceName);
+			resourceMapping.setName(attribute.getName());
+			resourceMapping.setEType(attribute.getEAttributeType());
+			resourceMapping.getEAnnotations().addAll(attribute.getEAnnotations());
+
+			// Set the complete feature path: base path + attribute
+			// This allows ValueMapperImpl to correctly extract values from the root object
+			if(nested) resourceMapping.getValueFeature().addAll(baseFeaturePath);
+			resourceMapping.getValueFeature().add(attribute);
+
+			// Copy collection index from the ReferenceMapping
+//			resourceMapping.setCollectionIndex(refMapping.getCollectionIndex());
+
+			resourceList.add(resourceMapping);
+			logger.debug("Auto-generated resource {} from ReferenceMapping", resourceName);
+		}
+
+		// Handle nested EReferences if referenceMappings are configured
+		if (refMapping.getReferenceMappings() != null && !refMapping.getReferenceMappings().isEmpty()) {
+			java.util.List<org.eclipse.emf.ecore.EReference> allReferences = eClass.getEAllReferences();
+
+			for (org.eclipse.sensinact.mapping.ReferenceMapping nestedMapping : refMapping.getReferenceMappings()) {
+				org.eclipse.emf.ecore.EClass nestedClass = null;
+				org.eclipse.emf.ecore.EReference targetReference = null;
+
+				// Check if targetEClass is explicitly set for the nested mapping
+				if (nestedMapping.getTargetEClass() != null) {
+					nestedClass = nestedMapping.getTargetEClass();
+
+					// Still need to find the target reference for building the feature path
+					targetReference = findTargetReference(allReferences, nestedMapping);
+					if (targetReference == null) {
+						logger.warn("Could not find target EReference for nested ReferenceMapping in {}",
+								eClass.getName());
+						continue;
+					}
+
+					logger.debug("Using explicitly specified targetEClass: {} for nested reference",
+							nestedClass.getName());
+				} else {
+					// Infer from the feature path
+					targetReference = findTargetReference(allReferences, nestedMapping);
+					if (targetReference == null) {
+						logger.warn("Could not find target EReference for nested ReferenceMapping in {}",
+								eClass.getName());
+						continue;
+					}
+
+					// Get the referenced EClass
+					org.eclipse.emf.ecore.EClassifier refType = targetReference.getEReferenceType();
+					if (!(refType instanceof org.eclipse.emf.ecore.EClass)) {
+						logger.warn("Nested reference {} is not an EClass", targetReference.getName());
+						continue;
+					}
+
+					nestedClass = (org.eclipse.emf.ecore.EClass) refType;
+					logger.debug("Inferred targetEClass from reference: {} for nested reference",
+							nestedClass.getName());
+				}
+
+				String nestedPrefix = namePrefix.isEmpty() ?
+						targetReference.getName() :
+						namePrefix + capitalize(targetReference.getName());
+
+				// Build the feature path for the nested reference
+				java.util.List<org.eclipse.emf.ecore.EStructuralFeature> nestedFeaturePath =
+						new java.util.ArrayList<>();
+				nestedFeaturePath.add(targetReference);
+
+				// Recursively generate resources from the nested object
+				generateResourcesFromEClass(nestedClass, nestedMapping, resourceList, nestedPrefix, nestedFeaturePath, true);
+			}
+		}
+	}
+
+	/**
+	 * Finds the EReference that a ReferenceMapping is targeting.
+	 */
+	private org.eclipse.emf.ecore.EReference findTargetReference(
+			java.util.List<org.eclipse.emf.ecore.EReference> allReferences,
+			org.eclipse.sensinact.mapping.ReferenceMapping nestedMapping) {
+
+		java.util.List<org.eclipse.emf.ecore.EStructuralFeature> featurePath = nestedMapping.getFeaturePath();
+		if (featurePath == null || featurePath.isEmpty()) {
+			return null;
+		}
+
+		// The first element in the feature path should be the EReference we're looking for
+		org.eclipse.emf.ecore.EStructuralFeature firstFeature = featurePath.get(0);
+		if (firstFeature instanceof org.eclipse.emf.ecore.EReference) {
+			org.eclipse.emf.ecore.EReference targetRef = (org.eclipse.emf.ecore.EReference) firstFeature;
+			// Verify it's in the list of available references
+			if (allReferences.contains(targetRef)) {
+				return targetRef;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Capitalizes the first letter of a string (used for building nested resource names).
+	 */
+	private String capitalize(String str) {
+		if (str == null || str.isEmpty()) {
+			return str;
+		}
+		return str.substring(0, 1).toUpperCase() + str.substring(1);
 	}
 
 	/**
@@ -296,15 +493,27 @@ public class ProviderModelSensinactMapper {
 			Map<String, Object> metadata = new HashMap<>();
 			if (nonNull(resourceMapping.getUnit())) {
 				metadata.put("unit", resourceMapping.getUnit());
+			} else {
+				metadata.put("unit", extractAnnotationValue(resourceMapping, SensinactMapperConstants.SENSINACT_MAPPING_ANNOTATION_SOURCE, SensinactMapperConstants.SENSINACT_MAPPING_UNIT));
 			}
+			
 			if (nonNull(resourceMapping.getName()) ) {
 				metadata.put("friendlyName", resourceMapping.getName());
 			}
-			if (nonNull(resourceMapping.getDescription()) ) {
-				metadata.put("description", resourceMapping.getDescription());
+			
+			if (nonNull(resourceMapping.getDescriptionMapping()) ) {
+				metadata.put("description", resourceMapping.getDescriptionMapping().getName());
+			} else {
+				metadata.put("description", extractAnnotationValue(resourceMapping, SensinactMapperConstants.SENSINACT_MAPPING_ANNOTATION_SOURCE, 
+						SensinactMapperConstants.SENSINACT_MAPPING_DESCRIPTION).isEmpty() ? 
+						extractAnnotationValue(resourceMapping, GENMODEL_ANNOTATION, DOCUMENTATION_KEY) : 
+						extractAnnotationValue(resourceMapping, SensinactMapperConstants.SENSINACT_MAPPING_ANNOTATION_SOURCE, SensinactMapperConstants.SENSINACT_MAPPING_DESCRIPTION));
 			}
+			
 			if(!resourceMapping.getExtraMetadata().isEmpty()) {
 				resourceMapping.getExtraMetadata().forEach(e -> metadata.put(e.getKey(), e.getValue()));
+			} else {
+				metadata.putAll(extractAnnotationDetails(resourceMapping, SensinactMapperConstants.SENSINACT_MAPPING_METADATA_ANNOTATION_SOURCE));
 			}
 			if (!metadata.isEmpty()) {
 				resourceBuilder = resourceBuilder.withDefaultMetadata(metadata);
@@ -313,5 +522,30 @@ public class ProviderModelSensinactMapper {
 		}
 		return resource;
 	}
+	
+	private String extractAnnotationValue(EAttribute eAttribute, String source, String detailKey) {
+		if(eAttribute.getEAnnotation(source) != null) {
+			if(eAttribute.getEAnnotation(source).getDetails().containsKey(detailKey)) {
+				return eAttribute.getEAnnotation(source).getDetails().get(detailKey);
+			}
+		}
+		return "";
+	}
+	
+	private Map<String, String> extractAnnotationDetails(EAttribute eAttribute, String source) {
+		if(eAttribute.getEAnnotation(source) != null) {
+			return eAttribute.getEAnnotation(source).getDetails().map();
+		}
+		return Collections.emptyMap();
+	}
+	
+//	private String extractDocumentationAnnotation(EAttribute eAttribute) {
+//		if(eAttribute.getEAnnotation(GENMODEL_ANNOTATION) != null) {
+//			if(eAttribute.getEAnnotation(GENMODEL_ANNOTATION).getDetails().containsKey(DOCUMENTATION_KEY)) {
+//				return eAttribute.getEAnnotation(GENMODEL_ANNOTATION).getDetails().get(DOCUMENTATION_KEY);
+//			}
+//		}
+//		return "";
+//	}
 
 }

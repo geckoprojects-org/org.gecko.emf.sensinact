@@ -41,6 +41,7 @@ import org.eclipse.sensinact.mapping.MappingPackage;
  *   <li>{@link org.eclipse.sensinact.mapping.impl.FeatureMappingImpl#getFunctionId <em>Function Id</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.impl.FeatureMappingImpl#getFeaturePath <em>Feature Path</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.impl.FeatureMappingImpl#getCollectionIndex <em>Collection Index</em>}</li>
+ *   <li>{@link org.eclipse.sensinact.mapping.impl.FeatureMappingImpl#getCollectionFilter <em>Collection Filter</em>}</li>
  * </ul>
  *
  * @generated
@@ -95,6 +96,26 @@ public class FeatureMappingImpl extends MinimalEObjectImpl.Container implements 
 	 * @ordered
 	 */
 	protected int collectionIndex = COLLECTION_INDEX_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getCollectionFilter() <em>Collection Filter</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCollectionFilter()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String COLLECTION_FILTER_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getCollectionFilter() <em>Collection Filter</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCollectionFilter()
+	 * @generated
+	 * @ordered
+	 */
+	protected String collectionFilter = COLLECTION_FILTER_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -180,6 +201,29 @@ public class FeatureMappingImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
+	public String getCollectionFilter() {
+		return collectionFilter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setCollectionFilter(String newCollectionFilter) {
+		String oldCollectionFilter = collectionFilter;
+		collectionFilter = newCollectionFilter;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MappingPackage.FEATURE_MAPPING__COLLECTION_FILTER, oldCollectionFilter, collectionFilter));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MappingPackage.FEATURE_MAPPING__FUNCTION_ID:
@@ -188,6 +232,8 @@ public class FeatureMappingImpl extends MinimalEObjectImpl.Container implements 
 				return getFeaturePath();
 			case MappingPackage.FEATURE_MAPPING__COLLECTION_INDEX:
 				return getCollectionIndex();
+			case MappingPackage.FEATURE_MAPPING__COLLECTION_FILTER:
+				return getCollectionFilter();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -211,6 +257,9 @@ public class FeatureMappingImpl extends MinimalEObjectImpl.Container implements 
 			case MappingPackage.FEATURE_MAPPING__COLLECTION_INDEX:
 				setCollectionIndex((Integer)newValue);
 				return;
+			case MappingPackage.FEATURE_MAPPING__COLLECTION_FILTER:
+				setCollectionFilter((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -232,6 +281,9 @@ public class FeatureMappingImpl extends MinimalEObjectImpl.Container implements 
 			case MappingPackage.FEATURE_MAPPING__COLLECTION_INDEX:
 				setCollectionIndex(COLLECTION_INDEX_EDEFAULT);
 				return;
+			case MappingPackage.FEATURE_MAPPING__COLLECTION_FILTER:
+				setCollectionFilter(COLLECTION_FILTER_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -250,6 +302,8 @@ public class FeatureMappingImpl extends MinimalEObjectImpl.Container implements 
 				return featurePath != null && !featurePath.isEmpty();
 			case MappingPackage.FEATURE_MAPPING__COLLECTION_INDEX:
 				return collectionIndex != COLLECTION_INDEX_EDEFAULT;
+			case MappingPackage.FEATURE_MAPPING__COLLECTION_FILTER:
+				return COLLECTION_FILTER_EDEFAULT == null ? collectionFilter != null : !COLLECTION_FILTER_EDEFAULT.equals(collectionFilter);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -268,6 +322,8 @@ public class FeatureMappingImpl extends MinimalEObjectImpl.Container implements 
 		result.append(functionId);
 		result.append(", collectionIndex: ");
 		result.append(collectionIndex);
+		result.append(", collectionFilter: ");
+		result.append(collectionFilter);
 		result.append(')');
 		return result.toString();
 	}

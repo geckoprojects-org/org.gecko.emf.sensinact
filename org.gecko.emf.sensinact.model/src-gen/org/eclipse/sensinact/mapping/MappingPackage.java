@@ -699,31 +699,13 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	int SERVICE_MAPPING__RESOURCES = MAPPING_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Collection Feature</b></em>' reference.
+	 * The feature id for the '<em><b>Referenced Resource</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SERVICE_MAPPING__COLLECTION_FEATURE = MAPPING_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Collection Index</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_MAPPING__COLLECTION_INDEX = MAPPING_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Collection Filter</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SERVICE_MAPPING__COLLECTION_FILTER = MAPPING_FEATURE_COUNT + 3;
+	int SERVICE_MAPPING__REFERENCED_RESOURCE = MAPPING_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Service Mapping</em>' class.
@@ -732,7 +714,7 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SERVICE_MAPPING_FEATURE_COUNT = MAPPING_FEATURE_COUNT + 4;
+	int SERVICE_MAPPING_FEATURE_COUNT = MAPPING_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Map Id</em>' operation.
@@ -997,31 +979,22 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	int RESOURCE_MAPPING__MID = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_MAPPING__DESCRIPTION = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Description Feature</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RESOURCE_MAPPING__DESCRIPTION_FEATURE = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 6;
-
-	/**
 	 * The feature id for the '<em><b>Extra Metadata</b></em>' map.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RESOURCE_MAPPING__EXTRA_METADATA = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 7;
+	int RESOURCE_MAPPING__EXTRA_METADATA = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Description Mapping</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_MAPPING__DESCRIPTION_MAPPING = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>Resource Mapping</em>' class.
@@ -1030,7 +1003,7 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RESOURCE_MAPPING_FEATURE_COUNT = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 8;
+	int RESOURCE_MAPPING_FEATURE_COUNT = EcorePackage.EATTRIBUTE_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get EAnnotation</em>' operation.
@@ -1133,31 +1106,13 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	int ADMIN_MAPPING__RESOURCES = SERVICE_MAPPING__RESOURCES;
 
 	/**
-	 * The feature id for the '<em><b>Collection Feature</b></em>' reference.
+	 * The feature id for the '<em><b>Referenced Resource</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADMIN_MAPPING__COLLECTION_FEATURE = SERVICE_MAPPING__COLLECTION_FEATURE;
-
-	/**
-	 * The feature id for the '<em><b>Collection Index</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ADMIN_MAPPING__COLLECTION_INDEX = SERVICE_MAPPING__COLLECTION_INDEX;
-
-	/**
-	 * The feature id for the '<em><b>Collection Filter</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ADMIN_MAPPING__COLLECTION_FILTER = SERVICE_MAPPING__COLLECTION_FILTER;
+	int ADMIN_MAPPING__REFERENCED_RESOURCE = SERVICE_MAPPING__REFERENCED_RESOURCE;
 
 	/**
 	 * The feature id for the '<em><b>Friendly Name</b></em>' attribute.
@@ -1342,13 +1297,22 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	int FEATURE_MAPPING__COLLECTION_INDEX = 2;
 
 	/**
+	 * The feature id for the '<em><b>Collection Filter</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FEATURE_MAPPING__COLLECTION_FILTER = 3;
+
+	/**
 	 * The number of structural features of the '<em>Feature Mapping</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FEATURE_MAPPING_FEATURE_COUNT = 3;
+	int FEATURE_MAPPING_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Feature Mapping</em>' class.
@@ -1395,6 +1359,15 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @ordered
 	 */
 	int TIMESTAMP_MAPPING__COLLECTION_INDEX = FEATURE_MAPPING__COLLECTION_INDEX;
+
+	/**
+	 * The feature id for the '<em><b>Collection Filter</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TIMESTAMP_MAPPING__COLLECTION_FILTER = FEATURE_MAPPING__COLLECTION_FILTER;
 
 	/**
 	 * The feature id for the '<em><b>Strategy</b></em>' attribute.
@@ -1479,6 +1452,15 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	int NAME_MAPPING__COLLECTION_INDEX = FEATURE_MAPPING__COLLECTION_INDEX;
 
 	/**
+	 * The feature id for the '<em><b>Collection Filter</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAME_MAPPING__COLLECTION_FILTER = FEATURE_MAPPING__COLLECTION_FILTER;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1541,6 +1523,15 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @ordered
 	 */
 	int VALUE_MAPPING__COLLECTION_INDEX = FEATURE_MAPPING__COLLECTION_INDEX;
+
+	/**
+	 * The feature id for the '<em><b>Collection Filter</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VALUE_MAPPING__COLLECTION_FILTER = FEATURE_MAPPING__COLLECTION_FILTER;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1616,6 +1607,106 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	int STRING_TO_STRING_MAP_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.sensinact.mapping.impl.ReferenceMappingImpl <em>Reference Mapping</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.sensinact.mapping.impl.ReferenceMappingImpl
+	 * @see org.eclipse.sensinact.mapping.impl.MappingPackageImpl#getReferenceMapping()
+	 * @generated
+	 */
+	int REFERENCE_MAPPING = 16;
+
+	/**
+	 * The feature id for the '<em><b>Function Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_MAPPING__FUNCTION_ID = FEATURE_MAPPING__FUNCTION_ID;
+
+	/**
+	 * The feature id for the '<em><b>Feature Path</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_MAPPING__FEATURE_PATH = FEATURE_MAPPING__FEATURE_PATH;
+
+	/**
+	 * The feature id for the '<em><b>Collection Index</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_MAPPING__COLLECTION_INDEX = FEATURE_MAPPING__COLLECTION_INDEX;
+
+	/**
+	 * The feature id for the '<em><b>Collection Filter</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_MAPPING__COLLECTION_FILTER = FEATURE_MAPPING__COLLECTION_FILTER;
+
+	/**
+	 * The feature id for the '<em><b>Filter</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_MAPPING__FILTER = FEATURE_MAPPING_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Exclude</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_MAPPING__EXCLUDE = FEATURE_MAPPING_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Reference Mappings</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_MAPPING__REFERENCE_MAPPINGS = FEATURE_MAPPING_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Target EClass</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_MAPPING__TARGET_ECLASS = FEATURE_MAPPING_FEATURE_COUNT + 3;
+
+	/**
+	 * The number of structural features of the '<em>Reference Mapping</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_MAPPING_FEATURE_COUNT = FEATURE_MAPPING_FEATURE_COUNT + 4;
+
+	/**
+	 * The number of operations of the '<em>Reference Mapping</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_MAPPING_OPERATION_COUNT = FEATURE_MAPPING_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.sensinact.mapping.TimestampStrategy <em>Timestamp Strategy</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1623,7 +1714,7 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @see org.eclipse.sensinact.mapping.impl.MappingPackageImpl#getTimestampStrategy()
 	 * @generated
 	 */
-	int TIMESTAMP_STRATEGY = 16;
+	int TIMESTAMP_STRATEGY = 17;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.sensinact.mapping.ProviderStrategy <em>Provider Strategy</em>}' enum.
@@ -1633,7 +1724,7 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @see org.eclipse.sensinact.mapping.impl.MappingPackageImpl#getProviderStrategy()
 	 * @generated
 	 */
-	int PROVIDER_STRATEGY = 17;
+	int PROVIDER_STRATEGY = 18;
 
 	/**
 	 * The meta object id for the '<em>EInstant</em>' data type.
@@ -1643,7 +1734,7 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @see org.eclipse.sensinact.mapping.impl.MappingPackageImpl#getEInstant()
 	 * @generated
 	 */
-	int EINSTANT = 18;
+	int EINSTANT = 19;
 
 	/**
 	 * The meta object id for the '<em>Java String Function</em>' data type.
@@ -1653,7 +1744,7 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @see org.eclipse.sensinact.mapping.impl.MappingPackageImpl#getJavaStringFunction()
 	 * @generated
 	 */
-	int JAVA_STRING_FUNCTION = 19;
+	int JAVA_STRING_FUNCTION = 20;
 
 	/**
 	 * The meta object id for the '<em>Java Instant Function</em>' data type.
@@ -1663,7 +1754,7 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @see org.eclipse.sensinact.mapping.impl.MappingPackageImpl#getJavaInstantFunction()
 	 * @generated
 	 */
-	int JAVA_INSTANT_FUNCTION = 20;
+	int JAVA_INSTANT_FUNCTION = 21;
 
 	/**
 	 * The meta object id for the '<em>Java Object Function</em>' data type.
@@ -1673,7 +1764,7 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @see org.eclipse.sensinact.mapping.impl.MappingPackageImpl#getJavaObjectFunction()
 	 * @generated
 	 */
-	int JAVA_OBJECT_FUNCTION = 21;
+	int JAVA_OBJECT_FUNCTION = 22;
 
 
 	/**
@@ -2033,37 +2124,15 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	EReference getServiceMapping_Resources();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.sensinact.mapping.ServiceMapping#getCollectionFeature <em>Collection Feature</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.sensinact.mapping.ServiceMapping#getReferencedResource <em>Referenced Resource</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Collection Feature</em>'.
-	 * @see org.eclipse.sensinact.mapping.ServiceMapping#getCollectionFeature()
+	 * @return the meta object for the reference '<em>Referenced Resource</em>'.
+	 * @see org.eclipse.sensinact.mapping.ServiceMapping#getReferencedResource()
 	 * @see #getServiceMapping()
 	 * @generated
 	 */
-	EReference getServiceMapping_CollectionFeature();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.sensinact.mapping.ServiceMapping#getCollectionIndex <em>Collection Index</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Collection Index</em>'.
-	 * @see org.eclipse.sensinact.mapping.ServiceMapping#getCollectionIndex()
-	 * @see #getServiceMapping()
-	 * @generated
-	 */
-	EAttribute getServiceMapping_CollectionIndex();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.sensinact.mapping.ServiceMapping#getCollectionFilter <em>Collection Filter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Collection Filter</em>'.
-	 * @see org.eclipse.sensinact.mapping.ServiceMapping#getCollectionFilter()
-	 * @see #getServiceMapping()
-	 * @generated
-	 */
-	EAttribute getServiceMapping_CollectionFilter();
+	EReference getServiceMapping_ReferencedResource();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.sensinact.mapping.ResourceMapping <em>Resource Mapping</em>}'.
@@ -2131,28 +2200,6 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	EAttribute getResourceMapping_Mid();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.sensinact.mapping.ResourceMapping#getDescription <em>Description</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Description</em>'.
-	 * @see org.eclipse.sensinact.mapping.ResourceMapping#getDescription()
-	 * @see #getResourceMapping()
-	 * @generated
-	 */
-	EAttribute getResourceMapping_Description();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.sensinact.mapping.ResourceMapping#getDescriptionFeature <em>Description Feature</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Description Feature</em>'.
-	 * @see org.eclipse.sensinact.mapping.ResourceMapping#getDescriptionFeature()
-	 * @see #getResourceMapping()
-	 * @generated
-	 */
-	EReference getResourceMapping_DescriptionFeature();
-
-	/**
 	 * Returns the meta object for the map '{@link org.eclipse.sensinact.mapping.ResourceMapping#getExtraMetadata <em>Extra Metadata</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2162,6 +2209,17 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @generated
 	 */
 	EReference getResourceMapping_ExtraMetadata();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.sensinact.mapping.ResourceMapping#getDescriptionMapping <em>Description Mapping</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Description Mapping</em>'.
+	 * @see org.eclipse.sensinact.mapping.ResourceMapping#getDescriptionMapping()
+	 * @see #getResourceMapping()
+	 * @generated
+	 */
+	EReference getResourceMapping_DescriptionMapping();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.sensinact.mapping.ResourceMapping#mapUnit(org.eclipse.emf.ecore.EObject, java.util.function.Function) <em>Map Unit</em>}' operation.
@@ -2410,6 +2468,17 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	EAttribute getFeatureMapping_CollectionIndex();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.sensinact.mapping.FeatureMapping#getCollectionFilter <em>Collection Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Collection Filter</em>'.
+	 * @see org.eclipse.sensinact.mapping.FeatureMapping#getCollectionFilter()
+	 * @see #getFeatureMapping()
+	 * @generated
+	 */
+	EAttribute getFeatureMapping_CollectionFilter();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.sensinact.mapping.TimestampMapping <em>Timestamp Mapping</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2527,6 +2596,60 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @generated
 	 */
 	EAttribute getStringToStringMap_Value();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.sensinact.mapping.ReferenceMapping <em>Reference Mapping</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Reference Mapping</em>'.
+	 * @see org.eclipse.sensinact.mapping.ReferenceMapping
+	 * @generated
+	 */
+	EClass getReferenceMapping();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.sensinact.mapping.ReferenceMapping#getFilter <em>Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Filter</em>'.
+	 * @see org.eclipse.sensinact.mapping.ReferenceMapping#getFilter()
+	 * @see #getReferenceMapping()
+	 * @generated
+	 */
+	EReference getReferenceMapping_Filter();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.sensinact.mapping.ReferenceMapping#isExclude <em>Exclude</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Exclude</em>'.
+	 * @see org.eclipse.sensinact.mapping.ReferenceMapping#isExclude()
+	 * @see #getReferenceMapping()
+	 * @generated
+	 */
+	EAttribute getReferenceMapping_Exclude();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.sensinact.mapping.ReferenceMapping#getReferenceMappings <em>Reference Mappings</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Reference Mappings</em>'.
+	 * @see org.eclipse.sensinact.mapping.ReferenceMapping#getReferenceMappings()
+	 * @see #getReferenceMapping()
+	 * @generated
+	 */
+	EReference getReferenceMapping_ReferenceMappings();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.sensinact.mapping.ReferenceMapping#getTargetEClass <em>Target EClass</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Target EClass</em>'.
+	 * @see org.eclipse.sensinact.mapping.ReferenceMapping#getTargetEClass()
+	 * @see #getReferenceMapping()
+	 * @generated
+	 */
+	EReference getReferenceMapping_TargetEClass();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.sensinact.mapping.TimestampStrategy <em>Timestamp Strategy</em>}'.
@@ -2894,28 +3017,12 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 		EReference SERVICE_MAPPING__RESOURCES = eINSTANCE.getServiceMapping_Resources();
 
 		/**
-		 * The meta object literal for the '<em><b>Collection Feature</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Referenced Resource</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference SERVICE_MAPPING__COLLECTION_FEATURE = eINSTANCE.getServiceMapping_CollectionFeature();
-
-		/**
-		 * The meta object literal for the '<em><b>Collection Index</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute SERVICE_MAPPING__COLLECTION_INDEX = eINSTANCE.getServiceMapping_CollectionIndex();
-
-		/**
-		 * The meta object literal for the '<em><b>Collection Filter</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute SERVICE_MAPPING__COLLECTION_FILTER = eINSTANCE.getServiceMapping_CollectionFilter();
+		EReference SERVICE_MAPPING__REFERENCED_RESOURCE = eINSTANCE.getServiceMapping_ReferencedResource();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.sensinact.mapping.impl.ResourceMappingImpl <em>Resource Mapping</em>}' class.
@@ -2968,28 +3075,20 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 		EAttribute RESOURCE_MAPPING__MID = eINSTANCE.getResourceMapping_Mid();
 
 		/**
-		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RESOURCE_MAPPING__DESCRIPTION = eINSTANCE.getResourceMapping_Description();
-
-		/**
-		 * The meta object literal for the '<em><b>Description Feature</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference RESOURCE_MAPPING__DESCRIPTION_FEATURE = eINSTANCE.getResourceMapping_DescriptionFeature();
-
-		/**
 		 * The meta object literal for the '<em><b>Extra Metadata</b></em>' map feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference RESOURCE_MAPPING__EXTRA_METADATA = eINSTANCE.getResourceMapping_ExtraMetadata();
+
+		/**
+		 * The meta object literal for the '<em><b>Description Mapping</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference RESOURCE_MAPPING__DESCRIPTION_MAPPING = eINSTANCE.getResourceMapping_DescriptionMapping();
 
 		/**
 		 * The meta object literal for the '<em><b>Map Unit</b></em>' operation.
@@ -3184,6 +3283,14 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 		EAttribute FEATURE_MAPPING__COLLECTION_INDEX = eINSTANCE.getFeatureMapping_CollectionIndex();
 
 		/**
+		 * The meta object literal for the '<em><b>Collection Filter</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FEATURE_MAPPING__COLLECTION_FILTER = eINSTANCE.getFeatureMapping_CollectionFilter();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.sensinact.mapping.impl.TimestampMappingImpl <em>Timestamp Mapping</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3278,6 +3385,48 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 		 * @generated
 		 */
 		EAttribute STRING_TO_STRING_MAP__VALUE = eINSTANCE.getStringToStringMap_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.sensinact.mapping.impl.ReferenceMappingImpl <em>Reference Mapping</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.sensinact.mapping.impl.ReferenceMappingImpl
+		 * @see org.eclipse.sensinact.mapping.impl.MappingPackageImpl#getReferenceMapping()
+		 * @generated
+		 */
+		EClass REFERENCE_MAPPING = eINSTANCE.getReferenceMapping();
+
+		/**
+		 * The meta object literal for the '<em><b>Filter</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE_MAPPING__FILTER = eINSTANCE.getReferenceMapping_Filter();
+
+		/**
+		 * The meta object literal for the '<em><b>Exclude</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REFERENCE_MAPPING__EXCLUDE = eINSTANCE.getReferenceMapping_Exclude();
+
+		/**
+		 * The meta object literal for the '<em><b>Reference Mappings</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE_MAPPING__REFERENCE_MAPPINGS = eINSTANCE.getReferenceMapping_ReferenceMappings();
+
+		/**
+		 * The meta object literal for the '<em><b>Target EClass</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE_MAPPING__TARGET_ECLASS = eINSTANCE.getReferenceMapping_TargetEClass();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.sensinact.mapping.TimestampStrategy <em>Timestamp Strategy</em>}' enum.

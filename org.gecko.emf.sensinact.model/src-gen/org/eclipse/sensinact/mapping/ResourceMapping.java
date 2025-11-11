@@ -38,9 +38,8 @@ import org.osgi.annotation.versioning.ProviderType;
  *   <li>{@link org.eclipse.sensinact.mapping.ResourceMapping#getValueFeature <em>Value Feature</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.ResourceMapping#getTimestamp <em>Timestamp</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.ResourceMapping#getMid <em>Mid</em>}</li>
- *   <li>{@link org.eclipse.sensinact.mapping.ResourceMapping#getDescription <em>Description</em>}</li>
- *   <li>{@link org.eclipse.sensinact.mapping.ResourceMapping#getDescriptionFeature <em>Description Feature</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.ResourceMapping#getExtraMetadata <em>Extra Metadata</em>}</li>
+ *   <li>{@link org.eclipse.sensinact.mapping.ResourceMapping#getDescriptionMapping <em>Description Mapping</em>}</li>
  * </ul>
  *
  * @see org.eclipse.sensinact.mapping.MappingPackage#getResourceMapping()
@@ -140,40 +139,6 @@ public interface ResourceMapping extends EObject, EAttribute {
 	void setMid(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Description</em>' attribute.
-	 * @see #setDescription(String)
-	 * @see org.eclipse.sensinact.mapping.MappingPackage#getResourceMapping_Description()
-	 * @model
-	 * @generated
-	 */
-	String getDescription();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.sensinact.mapping.ResourceMapping#getDescription <em>Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Description</em>' attribute.
-	 * @see #getDescription()
-	 * @generated
-	 */
-	void setDescription(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Description Feature</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EStructuralFeature}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Description Feature</em>' reference list.
-	 * @see org.eclipse.sensinact.mapping.MappingPackage#getResourceMapping_DescriptionFeature()
-	 * @model
-	 * @generated
-	 */
-	EList<EStructuralFeature> getDescriptionFeature();
-
-	/**
 	 * Returns the value of the '<em><b>Extra Metadata</b></em>' map.
 	 * The key is of type {@link java.lang.String},
 	 * and the value is of type {@link java.lang.String},
@@ -185,6 +150,28 @@ public interface ResourceMapping extends EObject, EAttribute {
 	 * @generated
 	 */
 	EMap<String, String> getExtraMetadata();
+
+	/**
+	 * Returns the value of the '<em><b>Description Mapping</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Description Mapping</em>' reference.
+	 * @see #setDescriptionMapping(NameMapping)
+	 * @see org.eclipse.sensinact.mapping.MappingPackage#getResourceMapping_DescriptionMapping()
+	 * @model derived="true"
+	 * @generated
+	 */
+	NameMapping getDescriptionMapping();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.sensinact.mapping.ResourceMapping#getDescriptionMapping <em>Description Mapping</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Description Mapping</em>' reference.
+	 * @see #getDescriptionMapping()
+	 * @generated
+	 */
+	void setDescriptionMapping(NameMapping value);
 
 	/**
 	 * <!-- begin-user-doc -->
