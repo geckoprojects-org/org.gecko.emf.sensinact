@@ -94,15 +94,39 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Wind direction: 0..360 Degrees (DD)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="°"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="degrees"/>
+        <details key="sensorthings.unit.definition" value="degrees"/>
+        <details key="dwd.id" value="DD"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="windSpeed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Wind speed: m/s (FF)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="m/s"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="meters per seconds"/>
+        <details key="sensorthings.unit.definition" value="meters per seconds"/>
+        <details key="dwd.id" value="FF"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="windGustLastHour" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Maximum wind gust within the last hour: m/s (FX1)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="m/s"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="meters per seconds"/>
+        <details key="sensorthings.unit.definition" value="meters per seconds"/>
+        <details key="dwd.id" value="FX1"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="windGustLastThreeHours"
@@ -110,66 +134,170 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Maximum wind gust within the last 3 hours: m/s (FX3)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="m/s"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="meters per seconds"/>
+        <details key="sensorthings.unit.definition" value="meters per seconds"/>
+        <details key="dwd.id" value="FX3"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="windGustMaxLast12Hours"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Maximum wind gust within the last 12 hours: m/s (FXh)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="m/s"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="meters per seconds"/>
+        <details key="sensorthings.unit.definition" value="meters per seconds"/>
+        <details key="dwd.id" value="FXh"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="windGustProb25" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of wind gusts >= 25kn within the last 12 hours: 0..100% (FXh25)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="FXh25"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="windGustProb40" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of wind gusts >= 40kn within the last 12 hours: 0..100% (FXh40)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="FXh40"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="windGustProb55" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of wind gusts >= 55kn within the last 12 hours: 0..100% (FXh55)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="FXh55"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cloudCoverTotal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Total cloud cover: 0..100% (N)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage"/>
+        <details key="sensorthings.unit.definition" value="percentage"/>
+        <details key="dwd.id" value="N"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cloudCoverBelow500" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Cloud cover below 500 ft.: 0..100% (N05)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage"/>
+        <details key="sensorthings.unit.definition" value="percentage"/>
+        <details key="dwd.id" value="N05"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cloudCoverEffective" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Effective cloud cover: 0..100% (Neff)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage"/>
+        <details key="sensorthings.unit.definition" value="percentage"/>
+        <details key="dwd.id" value="Neff"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cloudCoverHigh" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="High cloud cover (>7 km): 0..100% (Nh)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage"/>
+        <details key="sensorthings.unit.definition" value="percentage"/>
+        <details key="dwd.id" value="Nh"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cloudCoverMid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Midlevel cloud cover (2-7 km): 0..100% (Nm)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage"/>
+        <details key="sensorthings.unit.definition" value="percentage"/>
+        <details key="dwd.id" value="Nm"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="cloudCoverLow" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Low cloud cover (lower than 2 km): 0..100% (Nl)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage"/>
+        <details key="sensorthings.unit.definition" value="percentage"/>
+        <details key="dwd.id" value="Nl"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="irRadianceGlobal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Global Irradiance: kJ/m2 (Rad1h)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="kJ/m2"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Kilo Joul per square meter"/>
+        <details key="sensorthings.unit.definition" value="Kilo Joul per square meter"/>
+        <details key="dwd.id" value="Rad1h"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="surfacePressure" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Surface pressure, reduced: Pa (PPPP)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="Pa"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Pascal"/>
+        <details key="sensorthings.unit.definition" value="Pascal"/>
+        <details key="dwd.id" value="PPPP"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precipitationLarger02Last6"
@@ -177,11 +305,27 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of precipitation > 0.2mm during the last 6 hours: 0..100% (R602)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="R602"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precipitationLarger50Last6"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of precipitation > 5mm during the last 6 hours: 0..100% (R650)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="R650"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precipitationLarger02LastDay"
@@ -189,11 +333,27 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of precipitation > 0.2mm during the last 24 hours: 0..100% (Rd02)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="Rd02"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precipitationLarger50LastDay"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of precipitation > 5mm during the last 24 hours: 0..100% (Rd50)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="Rd50"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precipitationLarger00Last12"
@@ -201,11 +361,27 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of precipitation > 0.0mm during the last 12 hours: 0..100% (Rh00)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="Rh00"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precipitationLarger02Last12"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of precipitation > 0.2mm during the last 12 hours: 0..100% (Rh02)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="Rh02"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precipitationLarger10Last12"
@@ -213,11 +389,27 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of precipitation > 1 mm during the last 12 hours: 0..100% (Rh10)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="Rh10"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precipitationLarger50Last12"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability of precipitation > 5mm during the last 12 hours: 0..100% (Rh50)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="Rh50"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precipitationSignificantWeatherTotal"
@@ -225,21 +417,53 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Total precipitation during the last hour consistent with significant weather: kg/m2 (RR1c)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="kg/m2"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Kilograms per square meter"/>
+        <details key="sensorthings.unit.definition" value="Kilograms per square meter"/>
+        <details key="dwd.id" value="RR1c"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precipitationSignificantWeatherLast3"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Total precipitation during the last 3 hours  consistent with significant weather: kg/m2 (RR3c)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="kg/m2"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Kilograms per square meter"/>
+        <details key="sensorthings.unit.definition" value="Kilograms per square meter"/>
+        <details key="dwd.id" value="RR3c"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="snowRainEqLast1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Snow-Rain-Equivalent during the last hour: kg/m2 (RRS1c)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="kg/m2"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Kilograms per square meter"/>
+        <details key="sensorthings.unit.definition" value="Kilograms per square meter"/>
+        <details key="dwd.id" value="RRS1c"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="snowRainEqLast3" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Snow-Rain-Equivalent during the 3 hours: kg/m2 (RRS3c)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="kg/m2"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Kilograms per square meter"/>
+        <details key="sensorthings.unit.definition" value="Kilograms per square meter"/>
+        <details key="dwd.id" value="RRS3c"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="sunshineDurationLast1"
@@ -247,15 +471,39 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Sunshine duration during the last Hour: s (SunD1)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="s"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="seconds"/>
+        <details key="sensorthings.unit.definition" value="seconds"/>
+        <details key="dwd.id" value="SunD1"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tempAboveSurface5" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Temperature 5cm above surface: Kelvin (T5cm)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="K"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Kelvin"/>
+        <details key="sensorthings.unit.definition" value="Kelvin"/>
+        <details key="dwd.id" value="T5cm"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tempAboveSurface200" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Temperature 2m above surface: Kelvin (TTT)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="K"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Kelvin"/>
+        <details key="sensorthings.unit.definition" value="Kelvin"/>
+        <details key="dwd.id" value="TTT"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tempDewpointAboveSurface200"
@@ -263,20 +511,52 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Dewpoint 2m above surface: Kelvin (Td)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="K"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Kelvin"/>
+        <details key="sensorthings.unit.definition" value="Kelvin"/>
+        <details key="dwd.id" value="Td"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tempMinLast12" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Minimum temperature - within the last 12 hours: Kelvin (TN)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="K"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Kelvin"/>
+        <details key="sensorthings.unit.definition" value="Kelvin"/>
+        <details key="dwd.id" value="TN"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tempMaxLast12" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Maximum temperature - within the last 12 hours: Kelvin (TX)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="K"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="Kelvin"/>
+        <details key="sensorthings.unit.definition" value="Kelvin"/>
+        <details key="dwd.id" value="TX"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Visibility: m (VV)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="m"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="meters"/>
+        <details key="sensorthings.unit.definition" value="meters"/>
+        <details key="dwd.id" value="VV"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="significantWeather6Hours"
@@ -290,20 +570,47 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Significant weather during the past 3 hours: - (ww)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="dwd.id" value="ww"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fogPropLast1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability for fog within the last hour: 0..100% (wwM)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="wwM"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fogPropLast6" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability for fog within the last 6 hours: 0..100% (wwM6)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="wwM6"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fogPropLast12" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloatObject">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Probability for fog within the last 12 hours: 0..100% (wwMh)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping">
+        <details key="sensinact.mapping.unit" value="%"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="sensorthings.unit.name" value="percentage probability"/>
+        <details key="sensorthings.unit.definition" value="percentage probability"/>
+        <details key="dwd.id" value="wwMh"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -714,11 +1021,17 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Significant weather in the past 6 to 3 hours: - (W1 part of W1W2)"/>
       </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="dwd.id" value="W1 part of W1W2"/>
+      </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="w2" eType="#//WMOWeatherCodeType"
         defaultValueLiteral="UNKNOWN">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Significant weather in the past 3 hours: - (W2 part of W1W2)"/>
+      </eAnnotations>
+      <eAnnotations source="sensinact.mapping.metadata">
+        <details key="dwd.id" value="W2 part of W1W2"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

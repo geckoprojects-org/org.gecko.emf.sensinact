@@ -28,6 +28,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * <ul>
  *   <li>{@link org.eclipse.sensinact.mapping.ServiceMapping#getResources <em>Resources</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.ServiceMapping#getReferencedResource <em>Referenced Resource</em>}</li>
+ *   <li>{@link org.eclipse.sensinact.mapping.ServiceMapping#getTemporaryResources <em>Temporary Resources</em>}</li>
  * </ul>
  *
  * @see org.eclipse.sensinact.mapping.MappingPackage#getServiceMapping()
@@ -69,5 +70,17 @@ public interface ServiceMapping extends Mapping {
 	 * @generated
 	 */
 	void setReferencedResource(ReferenceMapping value);
+
+	/**
+	 * Returns the value of the '<em><b>Temporary Resources</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.sensinact.mapping.ResourceMapping}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Temporary Resources</em>' containment reference list.
+	 * @see org.eclipse.sensinact.mapping.MappingPackage#getServiceMapping_TemporaryResources()
+	 * @model containment="true" transient="true"
+	 * @generated
+	 */
+	EList<ResourceMapping> getTemporaryResources();
 
 } // ServiceMapping

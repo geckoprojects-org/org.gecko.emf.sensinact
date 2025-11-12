@@ -43,6 +43,7 @@ import org.eclipse.sensinact.mapping.ServiceMapping;
  * <ul>
  *   <li>{@link org.eclipse.sensinact.mapping.impl.ServiceMappingImpl#getResources <em>Resources</em>}</li>
  *   <li>{@link org.eclipse.sensinact.mapping.impl.ServiceMappingImpl#getReferencedResource <em>Referenced Resource</em>}</li>
+ *   <li>{@link org.eclipse.sensinact.mapping.impl.ServiceMappingImpl#getTemporaryResources <em>Temporary Resources</em>}</li>
  * </ul>
  *
  * @generated
@@ -67,6 +68,16 @@ public class ServiceMappingImpl extends MappingImpl implements ServiceMapping {
 	 * @ordered
 	 */
 	protected ReferenceMapping referencedResource;
+
+	/**
+	 * The cached value of the '{@link #getTemporaryResources() <em>Temporary Resources</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTemporaryResources()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ResourceMapping> temporaryResources;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -146,10 +157,25 @@ public class ServiceMappingImpl extends MappingImpl implements ServiceMapping {
 	 * @generated
 	 */
 	@Override
+	public EList<ResourceMapping> getTemporaryResources() {
+		if (temporaryResources == null) {
+			temporaryResources = new EObjectContainmentEList<ResourceMapping>(ResourceMapping.class, this, MappingPackage.SERVICE_MAPPING__TEMPORARY_RESOURCES);
+		}
+		return temporaryResources;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case MappingPackage.SERVICE_MAPPING__RESOURCES:
 				return ((InternalEList<?>)getResources()).basicRemove(otherEnd, msgs);
+			case MappingPackage.SERVICE_MAPPING__TEMPORARY_RESOURCES:
+				return ((InternalEList<?>)getTemporaryResources()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -167,6 +193,8 @@ public class ServiceMappingImpl extends MappingImpl implements ServiceMapping {
 			case MappingPackage.SERVICE_MAPPING__REFERENCED_RESOURCE:
 				if (resolve) return getReferencedResource();
 				return basicGetReferencedResource();
+			case MappingPackage.SERVICE_MAPPING__TEMPORARY_RESOURCES:
+				return getTemporaryResources();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -187,6 +215,10 @@ public class ServiceMappingImpl extends MappingImpl implements ServiceMapping {
 			case MappingPackage.SERVICE_MAPPING__REFERENCED_RESOURCE:
 				setReferencedResource((ReferenceMapping)newValue);
 				return;
+			case MappingPackage.SERVICE_MAPPING__TEMPORARY_RESOURCES:
+				getTemporaryResources().clear();
+				getTemporaryResources().addAll((Collection<? extends ResourceMapping>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -205,6 +237,9 @@ public class ServiceMappingImpl extends MappingImpl implements ServiceMapping {
 			case MappingPackage.SERVICE_MAPPING__REFERENCED_RESOURCE:
 				setReferencedResource((ReferenceMapping)null);
 				return;
+			case MappingPackage.SERVICE_MAPPING__TEMPORARY_RESOURCES:
+				getTemporaryResources().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -221,6 +256,8 @@ public class ServiceMappingImpl extends MappingImpl implements ServiceMapping {
 				return resources != null && !resources.isEmpty();
 			case MappingPackage.SERVICE_MAPPING__REFERENCED_RESOURCE:
 				return referencedResource != null;
+			case MappingPackage.SERVICE_MAPPING__TEMPORARY_RESOURCES:
+				return temporaryResources != null && !temporaryResources.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

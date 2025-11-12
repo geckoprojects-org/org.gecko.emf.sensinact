@@ -375,6 +375,67 @@ public class ProviderModelMapperTest {
         
         assertTrue(result.getValue());
     }
+    
+    @Test
+    @DisplayName("Weather mapping resources should have correct units from EAnnotation")
+    void weatherMapping2_hasCorrectUnitsFromEAnnotation() throws InterruptedException, ExecutionException, InvocationTargetException {
+        mappingRegistry.registerModelMapping(weatherMapping2);
+        
+        Promise<Boolean> result = gatewayThread.execute(new AbstractSensinactCommand<Boolean>() {
+            @Override
+            protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
+                try {
+                    Model model = modelManager.getModel(weatherMapping2.getMid());
+                    assertNotNull(model);
+                    
+                    // Verify wind service resource types and units
+                    Service currentWeahterService = model.getServices().get("currentWeather");
+                    org.eclipse.sensinact.core.model.Resource windSpeed = currentWeahterService.getResources().get("windSpeed");
+                    assertNotNull(windSpeed);
+                    assertEquals("m/s", windSpeed.getDefaultMetadata().get("unit"));
+                    
+                    return pf.resolved(true);
+                } catch (Exception e) {
+                    return pf.failed(e);
+                }
+            }
+        });
+        
+        assertTrue(result.getValue());
+    }
+
+    
+    @Test
+    @DisplayName("Weather mapping resources should have correct metadata from EAnnotation")
+    void weatherMapping2_hasCorrectMetadataFromEAnnotation() throws InterruptedException, ExecutionException, InvocationTargetException {
+        mappingRegistry.registerModelMapping(weatherMapping2);
+        
+        Promise<Boolean> result = gatewayThread.execute(new AbstractSensinactCommand<Boolean>() {
+            @Override
+            protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
+                try {
+                    Model model = modelManager.getModel(weatherMapping2.getMid());
+                    assertNotNull(model);
+                    
+                    // Verify wind service resource types and units
+                    Service currentWeahterService = model.getServices().get("currentWeather");
+                    org.eclipse.sensinact.core.model.Resource windSpeed = currentWeahterService.getResources().get("windSpeed");
+                    assertNotNull(windSpeed);
+                    assertEquals("FF", windSpeed.getDefaultMetadata().get("dwd.id"));
+                    assertEquals("meters per seconds", windSpeed.getDefaultMetadata().get("sensorthings.unit.name"));
+                    assertEquals("meters per seconds", windSpeed.getDefaultMetadata().get("sensorthings.unit.definition"));
+                    assertEquals("Wind speed: m/s (FF)", windSpeed.getDefaultMetadata().get("description"));
+                    assertEquals("m/s", windSpeed.getDefaultMetadata().get("unit"));
+
+                    return pf.resolved(true);
+                } catch (Exception e) {
+                    return pf.failed(e);
+                }
+            }
+        });
+        
+        assertTrue(result.getValue());
+    }
 
 
 //    @TestØ

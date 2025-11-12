@@ -24,12 +24,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -41,13 +38,11 @@ import org.eclipse.sensinact.core.twin.SensinactProvider;
 import org.eclipse.sensinact.core.twin.SensinactResource;
 import org.eclipse.sensinact.core.twin.SensinactService;
 import org.eclipse.sensinact.core.twin.TimedValue;
-import org.eclipse.sensinact.mapping.FeatureMapping;
 import org.eclipse.sensinact.mapping.ProviderMapping;
 import org.gecko.emf.osgi.annotation.require.RequireEMF;
 import org.gecko.emf.sensinact.model.ProviderMappingRegistry;
 import org.gecko.emf.sensinact.model.ValueMapper;
 import org.gecko.emf.sensinact.model.ValueMapperFactory;
-import org.gecko.emf.sensinact.model.functions.GenModelDocExtractor;
 import org.gecko.weather.model.weather.GeoPosition;
 import org.gecko.weather.model.weather.MOSMIXSWeatherReport;
 import org.gecko.weather.model.weather.Station;
@@ -58,6 +53,7 @@ import org.gecko.weather.model.weather.WeatherReports;
 import org.gecko.weather.model.weather.WeatherStation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -117,6 +113,8 @@ public class ValueMapperTest {
         
         // Register the mapping to create the provider model structure
         mappingRegistry.registerModelMapping(batteryMapping);
+        
+        
     }
 
     @AfterEach
@@ -357,6 +355,69 @@ public class ValueMapperTest {
     }
 
     @Test
+    @Disabled("This is currently not working because the admin service is treated differently in sensinact")
+    @DisplayName("Provider mapping: should map admin service")
+    void providerMapping_admin() throws Exception {
+        // Load weather mapping
+        URL mappingUrl = getClass().getResource(WEATHER_MAPPING_URI_NO_RESOURCES);
+        Resource mappingResource = resourceSet.createResource(URI.createURI(mappingUrl.toString()));
+        mappingResource.load(null);
+        ProviderMapping weatherMapping = (ProviderMapping) mappingResource.getContents().get(0);
+
+        // Create test data
+        WeatherReports weatherReports = createWeatherReportsTestData();
+
+        // Register mapping
+        mappingRegistry.registerModelMapping(weatherMapping);
+
+        // Execute mapping
+        Promise<Boolean> result = gatewayThread.execute(new AbstractSensinactCommand<Boolean>() {
+            @Override
+            protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
+                try {
+                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping);
+                    mapper.mapInstance(weatherReports);
+
+                    return pf.resolved(true);
+                } catch (Exception e) {
+                    return pf.failed(e);
+                }
+            }
+        });
+        
+        // Read mapping
+        result = gatewayThread.execute(new AbstractSensinactCommand<Boolean>() {
+            @Override
+            protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
+                try {
+                    
+
+                    SensinactProvider provider = twin.getProvider(WEATHER_MODEL, "10567");
+                    assertNotNull(provider, "Provider should exist");
+                    
+                    // Check currentWeather service exists
+                    SensinactService adminService = provider.getServices().get("admin");
+                    assertNotNull(adminService, "adminService service should exist");
+
+                    SensinactResource friendlyName = adminService.getResources().get("friendlyName");
+                    assertNotNull(friendlyName, "friendlyName resource should exist");
+
+                    Promise<TimedValue<?>> valuePromise = friendlyName.getValue();
+                    TimedValue<?> timedValue = valuePromise.getValue();
+                    assertEquals("GERA", timedValue.getValue(), "friendlyName should match reports[0]");
+
+                    return pf.resolved(true);
+                } catch (Exception e) {
+                    return pf.failed(e);
+                }
+            }
+        });
+
+        assertTrue(result.getValue(), "currentWeather mapping from reports[0] should succeed");
+    }
+
+    
+    @Test
     @DisplayName("Collection mapping: should map forecast3H service from reports[1]")
     void collectionMapping_forecast3H_usesReportAtIndex1() throws Exception {
         // Load weather mapping
@@ -468,10 +529,10 @@ public class ValueMapperTest {
         report0.setTimestamp(new java.util.Date());
         report0.setWeatherStation(weatherStation);
 
-        Station station0 = factory.createStation();
-        station0.setName("GERA");
-        station0.setLocation(location);
-        report0.setStation(station0);
+        Station station = factory.createStation();
+        station.setName("GERA");
+        station.setLocation(location);
+        report0.setStation(station);
 
         report0.setWindSpeed(5.0f);
         report0.setWindDirection(180.0f);
@@ -490,12 +551,8 @@ public class ValueMapperTest {
         MOSMIXSWeatherReport report1 = factory.createMOSMIXSWeatherReport();
         report1.setId("report-1");
         report1.setTimestamp(new java.util.Date(System.currentTimeMillis() + 10800000)); // +3 hours
-        report1.setWeatherStation(weatherStation);
-
-        Station station1 = factory.createStation();
-        station1.setName("GERA");
-        station1.setLocation(location);
-        report1.setStation(station1);
+        report1.setWeatherStation(EcoreUtil.copy(weatherStation));
+        report1.setStation(EcoreUtil.copy(station));
 
         report1.setWindSpeed(7.5f); // Different value for forecast
         report1.setWindDirection(200.0f);
@@ -510,163 +567,8 @@ public class ValueMapperTest {
         return weatherReports;
     }
 
-    // ========== Automatic Resource Mapping with Description Extraction Tests ==========
-
-    @Test
-    @DisplayName("Function registry: GenModelDocExtractor should extract documentation from EAttributes")
-    void functionRegistry_genModelDocExtractor_extractsDocumentation() throws Exception {
-        // Load weather mapping
-        URL mappingUrl = getClass().getResource(WEATHER_MAPPING_URI_NO_RESOURCES);
-        Resource mappingResource = resourceSet.createResource(URI.createURI(mappingUrl.toString()));
-        mappingResource.load(null);
-        ProviderMapping weatherMapping = (ProviderMapping) mappingResource.getContents().get(0);
-
-        // Create test data
-        WeatherReports weatherReports = createWeatherReportsTestData();
-
-        // Register mapping
-        mappingRegistry.registerModelMapping(weatherMapping);
-
-        // Create function registry with GenModelDocExtractor
-        Map<String, BiFunction<EObject, FeatureMapping, Object>> functionRegistry = new HashMap<>();
-        functionRegistry.put("extractGenModelDoc", GenModelDocExtractor.INSTANCE);
-
-        // Execute mapping with function registry
-        Promise<Boolean> result = gatewayThread.execute(new AbstractSensinactCommand<Boolean>() {
-            @Override
-            protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
-                try {
-                    // Create ValueMapper with function registry
-                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping, functionRegistry);
-                    mapper.mapInstance(weatherReports);
-
-                    SensinactProvider provider = twin.getProvider(WEATHER_MODEL, "10567");
-                    assertNotNull(provider, "Provider should exist");
-
-                    // Verify that resources exist
-                    SensinactService currentWeatherService = provider.getServices().get("currentWeather");
-                    assertNotNull(currentWeatherService, "currentWeather service should exist");
-
-                    // Check windSpeed resource exists
-                    SensinactResource windSpeedResource = currentWeatherService.getResources().get("windSpeed");
-                    assertNotNull(windSpeedResource, "windSpeed resource should exist");
-
-                    // Verify the value was set
-                    Promise<TimedValue<?>> valuePromise = windSpeedResource.getValue();
-                    TimedValue<?> timedValue = valuePromise.getValue();
-                    assertEquals(5.0f, timedValue.getValue(), "windSpeed value should be set correctly");
-
-                    // Note: Description verification depends on whether the weather model
-                    // EAttributes have GenModel documentation annotations. If they do,
-                    // the description would be automatically extracted and set.
-                    // For this test, we're primarily verifying that the function registry
-                    // mechanism works without errors.
-
-                    return pf.resolved(true);
-                } catch (Exception e) {
-                    return pf.failed(e);
-                }
-            }
-        });
-
-        assertTrue(result.getValue(), "Mapping with GenModelDocExtractor should succeed");
-    }
-
-    @Test
-    @DisplayName("Function registry: should work without registered functions")
-    void functionRegistry_withoutFunctions_mapsValuesWithoutDescriptions() throws Exception {
-        // Load weather mapping
-        URL mappingUrl = getClass().getResource(WEATHER_MAPPING_URI_NO_RESOURCES);
-        Resource mappingResource = resourceSet.createResource(URI.createURI(mappingUrl.toString()));
-        mappingResource.load(null);
-        ProviderMapping weatherMapping = (ProviderMapping) mappingResource.getContents().get(0);
-
-        // Create test data
-        WeatherReports weatherReports = createWeatherReportsTestData();
-
-        // Register mapping
-        mappingRegistry.registerModelMapping(weatherMapping);
-
-        // Create EMPTY function registry (no GenModelDocExtractor)
-        Map<String, BiFunction<EObject, FeatureMapping, Object>> emptyRegistry = new HashMap<>();
-
-        // Execute mapping with empty function registry
-        Promise<Boolean> result = gatewayThread.execute(new AbstractSensinactCommand<Boolean>() {
-            @Override
-            protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
-                try {
-                    // Create ValueMapper with empty function registry
-                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping, emptyRegistry);
-                    mapper.mapInstance(weatherReports);
-
-                    SensinactProvider provider = twin.getProvider(WEATHER_MODEL, "10567");
-                    assertNotNull(provider, "Provider should exist");
-
-                    // Verify that resources exist and have values
-                    SensinactService currentWeatherService = provider.getServices().get("currentWeather");
-                    assertNotNull(currentWeatherService, "currentWeather service should exist");
-
-                    SensinactResource windSpeedResource = currentWeatherService.getResources().get("windSpeed");
-                    assertNotNull(windSpeedResource, "windSpeed resource should exist");
-
-                    // Verify the value was set correctly even without function registry
-                    Promise<TimedValue<?>> valuePromise = windSpeedResource.getValue();
-                    TimedValue<?> timedValue = valuePromise.getValue();
-                    assertEquals(5.0f, timedValue.getValue(), "windSpeed value should be set correctly");
-
-                    // Without GenModelDocExtractor registered, descriptions won't be automatically
-                    // extracted for auto-generated resources, but the mapping should still work.
-
-                    return pf.resolved(true);
-                } catch (Exception e) {
-                    return pf.failed(e);
-                }
-            }
-        });
-
-        assertTrue(result.getValue(), "Mapping without function registry should still work");
-    }
-
-    @Test
-    @DisplayName("Function registry: custom function should be invoked for FeatureMapping")
-    void functionRegistry_customFunction_isInvoked() throws Exception {
-        // Load battery mapping
-        // Create a custom test function that always returns a fixed string
-        final String[] invocationCounter = {null}; // Track if function was called
-
-        BiFunction<EObject, FeatureMapping, Object> customFunction = (source, featureMapping) -> {
-            invocationCounter[0] = "CUSTOM_FUNCTION_CALLED";
-            return "Custom Test Value";
-        };
-
-        Map<String, BiFunction<EObject, FeatureMapping, Object>> functionRegistry = new HashMap<>();
-        functionRegistry.put("customTestFunction", customFunction);
-
-        // Note: This test demonstrates that custom functions can be registered and invoked.
-        // A complete test would require a mapping configuration that uses functionId="customTestFunction"
-        // Since we're working with existing mappings, this test verifies the registry mechanism
-        // without requiring a specific mapping configuration.
-
-        // Execute in gateway thread to verify function registry setup works
-        Promise<Boolean> result = gatewayThread.execute(new AbstractSensinactCommand<Boolean>() {
-            @Override
-            protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
-                try {
-                    // Create ValueMapper with custom function registry
-                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, batteryMapping, functionRegistry);
-
-                    // Verify mapper was created successfully with function registry
-                    assertNotNull(mapper, "ValueMapper should be created with function registry");
-
-                    return pf.resolved(true);
-                } catch (Exception e) {
-                    return pf.failed(e);
-                }
-            }
-        });
-
-        assertTrue(result.getValue(), "ValueMapper should be created with custom function registry");
-    }
+   
+   
 
     // ========== Nested Reference Mapping Tests ==========
 
@@ -690,11 +592,9 @@ public class ValueMapperTest {
             @Override
             protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
                 try {
-                    // Create function registry for automatic description extraction
-                    Map<String, BiFunction<EObject, FeatureMapping, Object>> functionRegistry = new HashMap<>();
-                    functionRegistry.put("extractGenModelDoc", GenModelDocExtractor.INSTANCE);
+                  
 
-                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping, functionRegistry);
+                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping);
                     mapper.mapInstance(weatherReports);
 
                     SensinactProvider provider = twin.getProvider(WEATHER_MODEL, "10567");
@@ -740,12 +640,9 @@ public class ValueMapperTest {
         Promise<Boolean> result = gatewayThread.execute(new AbstractSensinactCommand<Boolean>() {
             @Override
             protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
-                try {
-                    // Create function registry
-                    Map<String, BiFunction<EObject, FeatureMapping, Object>> functionRegistry = new HashMap<>();
-                    functionRegistry.put("extractGenModelDoc", GenModelDocExtractor.INSTANCE);
+                try {                    
 
-                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping, functionRegistry);
+                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping);
                     mapper.mapInstance(weatherReports);
 
                     SensinactProvider provider = twin.getProvider(WEATHER_MODEL, "10567");
@@ -800,11 +697,9 @@ public class ValueMapperTest {
             @Override
             protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
                 try {
-                    // Create function registry
-                    Map<String, BiFunction<EObject, FeatureMapping, Object>> functionRegistry = new HashMap<>();
-                    functionRegistry.put("extractGenModelDoc", GenModelDocExtractor.INSTANCE);
+                   
 
-                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping, functionRegistry);
+                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping);
                     mapper.mapInstance(weatherReports);
 
                     SensinactProvider provider = twin.getProvider(WEATHER_MODEL, "10567");
@@ -851,11 +746,9 @@ public class ValueMapperTest {
             @Override
             protected Promise<Boolean> call(SensinactDigitalTwin twin, SensinactModelManager modelManager, PromiseFactory pf) {
                 try {
-                    // Create function registry
-                    Map<String, BiFunction<EObject, FeatureMapping, Object>> functionRegistry = new HashMap<>();
-                    functionRegistry.put("extractGenModelDoc", GenModelDocExtractor.INSTANCE);
+                   
 
-                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping, functionRegistry);
+                    ValueMapper mapper = ValueMapperFactory.createValueMapper(twin, weatherMapping);
                     mapper.mapInstance(weatherReports);
 
                     SensinactProvider provider = twin.getProvider(WEATHER_MODEL, "10567");

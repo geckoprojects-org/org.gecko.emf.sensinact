@@ -174,6 +174,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="resources" upperBound="-1"
         eType="#//ResourceMapping" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="referencedResource" eType="#//ReferenceMapping"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="temporaryResources" upperBound="-1"
+        eType="#//ResourceMapping" transient="true" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ResourceMapping" eSuperTypes="http://www.eclipse.org/emf/2002/Ecore#//EAttribute">
     <eOperations name="mapUnit">

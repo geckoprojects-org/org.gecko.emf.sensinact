@@ -61,6 +61,7 @@
     <genClasses ecoreClass="sensinact-mapping.ecore#//ServiceMapping">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ServiceMapping/resources"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ServiceMapping/referencedResource"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sensinact-mapping.ecore#//ServiceMapping/temporaryResources"/>
     </genClasses>
     <genClasses ecoreClass="sensinact-mapping.ecore#//ResourceMapping">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensinact-mapping.ecore#//ResourceMapping/unit"/>

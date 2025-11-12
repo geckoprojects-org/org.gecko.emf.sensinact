@@ -708,13 +708,22 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	int SERVICE_MAPPING__REFERENCED_RESOURCE = MAPPING_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Temporary Resources</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SERVICE_MAPPING__TEMPORARY_RESOURCES = MAPPING_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Service Mapping</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SERVICE_MAPPING_FEATURE_COUNT = MAPPING_FEATURE_COUNT + 2;
+	int SERVICE_MAPPING_FEATURE_COUNT = MAPPING_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Map Id</em>' operation.
@@ -1113,6 +1122,15 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	 * @ordered
 	 */
 	int ADMIN_MAPPING__REFERENCED_RESOURCE = SERVICE_MAPPING__REFERENCED_RESOURCE;
+
+	/**
+	 * The feature id for the '<em><b>Temporary Resources</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADMIN_MAPPING__TEMPORARY_RESOURCES = SERVICE_MAPPING__TEMPORARY_RESOURCES;
 
 	/**
 	 * The feature id for the '<em><b>Friendly Name</b></em>' attribute.
@@ -2135,6 +2153,17 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 	EReference getServiceMapping_ReferencedResource();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.sensinact.mapping.ServiceMapping#getTemporaryResources <em>Temporary Resources</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Temporary Resources</em>'.
+	 * @see org.eclipse.sensinact.mapping.ServiceMapping#getTemporaryResources()
+	 * @see #getServiceMapping()
+	 * @generated
+	 */
+	EReference getServiceMapping_TemporaryResources();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.sensinact.mapping.ResourceMapping <em>Resource Mapping</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3023,6 +3052,14 @@ public interface MappingPackage extends org.eclipse.emf.ecore.EPackage {
 		 * @generated
 		 */
 		EReference SERVICE_MAPPING__REFERENCED_RESOURCE = eINSTANCE.getServiceMapping_ReferencedResource();
+
+		/**
+		 * The meta object literal for the '<em><b>Temporary Resources</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SERVICE_MAPPING__TEMPORARY_RESOURCES = eINSTANCE.getServiceMapping_TemporaryResources();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.sensinact.mapping.impl.ResourceMappingImpl <em>Resource Mapping</em>}' class.

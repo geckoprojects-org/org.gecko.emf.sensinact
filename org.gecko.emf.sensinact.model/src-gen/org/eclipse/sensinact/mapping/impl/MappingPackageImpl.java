@@ -624,6 +624,16 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getServiceMapping_TemporaryResources() {
+		return (EReference)serviceMappingEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getResourceMapping() {
 		return resourceMappingEClass;
 	}
@@ -1227,6 +1237,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		serviceMappingEClass = createEClass(SERVICE_MAPPING);
 		createEReference(serviceMappingEClass, SERVICE_MAPPING__RESOURCES);
 		createEReference(serviceMappingEClass, SERVICE_MAPPING__REFERENCED_RESOURCE);
+		createEReference(serviceMappingEClass, SERVICE_MAPPING__TEMPORARY_RESOURCES);
 
 		resourceMappingEClass = createEClass(RESOURCE_MAPPING);
 		createEAttribute(resourceMappingEClass, RESOURCE_MAPPING__UNIT);
@@ -1376,6 +1387,7 @@ public class MappingPackageImpl extends EPackageImpl implements MappingPackage {
 		initEClass(serviceMappingEClass, ServiceMapping.class, "ServiceMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getServiceMapping_Resources(), this.getResourceMapping(), null, "resources", null, 0, -1, ServiceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getServiceMapping_ReferencedResource(), this.getReferenceMapping(), null, "referencedResource", null, 0, 1, ServiceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getServiceMapping_TemporaryResources(), this.getResourceMapping(), null, "temporaryResources", null, 0, -1, ServiceMapping.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(resourceMappingEClass, ResourceMapping.class, "ResourceMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getResourceMapping_Unit(), ecorePackage.getEString(), "unit", null, 0, 1, ResourceMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -42,7 +42,7 @@
     <name name="Admin"/>
     <friendlyNameFeature
         xsi:type="ecore:EReference"
-        href="http://cdc.dwd.de/common/weather#//WeatherReports/report"/>
+        href="http://cdc.dwd.de/common/weather#//WeatherReports/reports"/>
     <friendlyNameFeature
         xsi:type="ecore:EReference"
         href="http://cdc.dwd.de/common/weather#//WeatherReport/station"/>
